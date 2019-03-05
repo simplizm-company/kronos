@@ -28,13 +28,14 @@
 .kronos-head .kronos-select-month {width: 50px; margin: 0 5px;}
 
 .kronos-head button {position: absolute; top: 12px; width: 24px; height: 24px; border: none; border-radius: 3px; text-indent: -9999em; cursor: pointer;}
-.kronos-head button:focus, .kronos-outer .kronos-viewer .kronos-head button:hover {border: 1px solid #ddd;}
+.kronos-head button:focus, .kronos-head button:hover {border: 1px solid #ddd;}
 
 .kronos-head .kronos-prev-month {left: 36px; background: url(images/prev-month.png) center center no-repeat;}
 .kronos-head .kronos-next-month {right: 36px; background: url(images/next-month.png) center center no-repeat;}
 .kronos-head .kronos-prev-year {left: 12px; background: url(images/prev-year.png) center center no-repeat;}
 .kronos-head .kronos-next-year {right: 12px; background: url(images/next-year.png) center center no-repeat;}
-.kronos-head .kronos-today {position: relative; top: auto; width: auto; height: auto; font-size: 12px; text-indent: 0;}
+.kronos-head .kronos-today {position: relative; top: auto; width: auto; height: auto; margin: 10px 0 0; font-size: 12px; text-indent: 0; background: none; border: none;}
+.kronos-head .kronos-today:focus, .kronos-head .kronos-today:hover {border: none;}
 
 .kronos-body table {width: 100%; border-spacing: 0; table-layout: fixed;}
 

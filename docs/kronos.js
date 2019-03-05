@@ -34,6 +34,7 @@
                     days : ['일', '월', '화', '수', '목', '금', '토'],
                     month : ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
                     btnToday : '오늘로',
+                    btnTrigger : '날짜 선택하기',
                     btnPrevMonth : '이전달',
                     btnNextMonth : '다음달',
                     btnPrevYear : '이전해',
@@ -75,7 +76,7 @@
             }
             _.node = {
                 outer: '<div class="'+_.opt.nameSpace+'-outer" />',
-                trigger: '<button type="button" class="'+_.opt.nameSpace+'-trigger" title="'+_.opt.text.btnToday+'">'+_.opt.text.btnToday+'</button>',
+                trigger: '<button type="button" class="'+_.opt.nameSpace+'-trigger" title="'+_.opt.text.btnTrigger+'">'+_.opt.text.btnTrigger+'</button>',
                 viewer: '<div class="'+_.opt.nameSpace+'-viewer" />',
                 animate: '<div class="'+_.opt.nameSpace+'-animate" />',
                 btnPrevMonth: '<button type="button" class="'+_.opt.nameSpace+'-prev-month" title="'+_.opt.text.btnPrevMonth+'">'+_.opt.text.btnPrevMonth+'</button>',
