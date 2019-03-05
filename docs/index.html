@@ -67,6 +67,7 @@ td, th {vertical-align: middle;}
 #inner .options {margin: 0 0 100px;}
 #inner .options table thead tr th {padding: 15px; color: #000000; text-align: center; background: #f7f7f7;}
 #inner .options table tbody tr td {padding: 15px; text-align: center; border-bottom: 1px solid #dddddd;}
+#inner .options table tbody tr td:nth-child(3) {text-align: left;}
 
 #inner .methods {margin: 0 0 100px;}
 #inner .methods table thead tr th {padding: 15px; color: #000000; text-align: center; background: #f7f7f7;}
@@ -116,10 +117,42 @@ td, th {vertical-align: middle;}
                     </thead>
                     <tbody>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>initDate</td>
+                            <td>String</td>
+                            <td>기본 value값을 집어넣을 수 있습니다.<br>
+                            반드시 문자열로 입력해야 합니다.<br>
+                            ex) '20190305'</td>
+                            <td>null</td>
+                        </tr>
+                        <tr>
+                            <td>format</td>
+                            <td>String</td>
+                            <td>value값의 노출 포맷을 지정할 수 있습니다.<br>
+                            ex) 'yy.mm.dd', 'mm/dd/yyyy' 등등</td>
+                            <td>'yyyy-mm-dd'</td>
+                        </tr>
+                        <tr>
+                            <td>visible</td>
+                            <td>boolean</td>
+                            <td>datepicker의 고정 여부를 정합니다.</td>
+                            <td>false</td>
+                        </tr>
+                        <tr>
+                            <td>disableWeekends</td>
+                            <td>boolean</td>
+                            <td>주말의 활성화 여부를 정합니다.</td>
+                            <td>false</td>
+                        </tr>
+                        <tr>
+                            <td>button</td>
+                            <td>boolean</td>
+                            <td>각종버튼의 사용 여부를 정합니다. <a href="#kronos5">데모 보러가기</a></td>
+                            <td>
+                                month : true<br>
+                                year : true<br>
+                                trigger : false<br>
+                                today : false
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -142,7 +175,7 @@ td, th {vertical-align: middle;}
                 </section>
                 <section class="demo">
                     <div class="desc">
-                        <h3 class="tit">2. 밸류값 설정</h3>
+                        <h3 class="tit">2. value값 설정</h3>
                     </div>
                     <div class="cont">
                         <input type="text" id="kronos2" style="width: 200px;">
@@ -155,7 +188,7 @@ td, th {vertical-align: middle;}
                 </section>
                 <section class="demo">
                     <div class="desc">
-                        <h3 class="tit">3. 밸류 포맷 설정</h3>
+                        <h3 class="tit">3. value 포맷 설정</h3>
                     </div>
                     <div class="cont">
                         <input type="text" id="kronos3-1" style="width: 200px;">
@@ -189,14 +222,17 @@ td, th {vertical-align: middle;}
                 </section>
                 <section class="demo">
                     <div class="desc">
-                        <h3 class="tit">5. 오늘날짜로 이동 버튼 사용여부</h3>
+                        <h3 class="tit">5. 각종 버튼의 사용 여부</h3>
                     </div>
                     <div class="cont">
                         <input type="text" id="kronos5" style="width: 200px;">
                         <script>
                             $('#kronos5').kronos({
                                 button: {
-                                    today: true
+                                    month : true,
+                                    year : true,
+                                    trigger : true,
+                                    today : true
                                 }
                             });
                         </script>
