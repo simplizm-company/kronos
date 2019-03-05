@@ -1,0 +1,6 @@
+node_modules
+project/dist
+gulpfile.js
+package-lock.json
+package.json
+index.html
