@@ -68,10 +68,12 @@ td, th {vertical-align: middle;}
 #inner .options table thead tr th {padding: 15px; color: #000000; text-align: center; background: #f7f7f7;}
 #inner .options table tbody tr td {padding: 15px; text-align: center; border-bottom: 1px solid #dddddd;}
 #inner .options table tbody tr td:nth-child(3) {text-align: left;}
+#inner .options table tbody tr td a {color: #569cd6;}
 
 #inner .methods {margin: 0 0 100px;}
 #inner .methods table thead tr th {padding: 15px; color: #000000; text-align: center; background: #f7f7f7;}
 #inner .methods table tbody tr td {padding: 15px; text-align: center; border-bottom: 1px solid #dddddd;}
+#inner .methods table tbody tr td a {color: #569cd6;}
 
 #inner .demowrap {margin: 0 0 100px;}
 #inner .demowrap .demo {width: 800px; margin: 0 auto 100px;}
@@ -118,7 +120,7 @@ td, th {vertical-align: middle;}
                     <tbody>
                         <tr>
                             <td>initDate</td>
-                            <td>String</td>
+                            <td>string</td>
                             <td>기본 value값을 집어넣을 수 있습니다.<br>
                             반드시 문자열로 입력해야 합니다.<br>
                             ex) '20190305'</td>
@@ -126,7 +128,7 @@ td, th {vertical-align: middle;}
                         </tr>
                         <tr>
                             <td>format</td>
-                            <td>String</td>
+                            <td>string</td>
                             <td>value값의 노출 포맷을 지정할 수 있습니다.<br>
                             ex) 'yy.mm.dd', 'mm/dd/yyyy' 등등</td>
                             <td>'yyyy-mm-dd'</td>
@@ -146,7 +148,8 @@ td, th {vertical-align: middle;}
                         <tr>
                             <td>button</td>
                             <td>boolean</td>
-                            <td>각종버튼의 사용 여부를 정합니다. <a href="#kronos5">데모 보러가기</a></td>
+                            <td>각종버튼의 사용 여부를 정합니다.<br>
+                                <a href="#kronos5">데모 보러가기</a></td>
                             <td>
                                 month : true<br>
                                 year : true<br>
@@ -154,11 +157,67 @@ td, th {vertical-align: middle;}
                                 today : false
                             </td>
                         </tr>
+                        <tr>
+                            <td>text</td>
+                            <td>string</td>
+                            <td>각종텍스트를 재정의 합니다.<br>
+                                <a href="#kronos7">데모 보러가기</a></td>
+                            <td>js파일 참고</td>
+                        </tr>
+                        <tr>
+                            <td>select</td>
+                            <td>boolean</td>
+                            <td>년, 월 select 사용 여부</td>
+                            <td>false</td>
+                        </tr>
+                        <tr>
+                            <td>selectYear</td>
+                            <td>number</td>
+                            <td>select옵션을 사용할 때 년도의 범위를 지정</td>
+                            <td>
+                                start: -100,<br>
+                                end: 0
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>periodFrom,<br>periodTo</td>
+                            <td>selector</td>
+                            <td>기간설정 달력 사용 시 두개의 kronos를 연결할 때 사용</td>
+                            <td>false</td>
+                        </tr>
+                        <tr>
+                            <td>date</td>
+                            <td>array</td>
+                            <td>공휴일 및 비활성화 날짜 지정<br>
+                                <a href="#kronos10">데모 보러가기</a></td>
+                            <td>
+                                disabled: [],<br>
+                                holiday: []
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </section>
             <section class="methods">
                 <h2>3. 메소드 (준비중입니다)</h2>
+                <table>
+                    <colgroup>
+                        <col style="width: 20%;">
+                        <col style="width: auto;">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>메소드</th>
+                            <th>메소드 설명</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
             </section>
             <section class="demowrap">
                 <h2>4. 데모 및 소스</h2>
