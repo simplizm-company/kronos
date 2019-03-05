@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=1100px, user-scalable=no">
+    <meta name="description" content="jquery slider, eclipse slider, 슬라이더, 제이쿼리 슬라이더, 이클립스, eclipse">
+    <meta name="keywords" content="jquery, slider, plugin, eclipse, 슬라이더, 제이쿼리, 이클립스">
+    <meta name="author" content="simplizm">
+    <meta property="og:title" content="eclipse slider">
+    <meta property="og:description" content="jquery slider plugin eclipse">
+    <title>eclipse slider</title>
+    <link rel="shortcut icon" type="image/x-icon" href="">
+    <link rel="stylesheet" href="kronos.css"></link>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+    <script src="kronos.js"></script>
+</head>
+<body>
+<style>
+@font-face {
+    font-family: NanumGothic;
+    font-style: normal;
+    font-weight: 400;
+    src: url("./fonts/NanumGothic-400.woff") format("woff");
+}
+
+@font-face {
+    font-family: NanumGothic;
+    font-style: normal;
+    font-weight: 700;
+    src: url("./fonts/NanumGothic-700.woff") format("woff");
+}
+
+@font-face {
+    font-family: NanumSquare;
+    font-style: normal;
+    font-weight: 400;
+    src: url("./fonts/NanumSquare-400.woff") format("woff");
+}
+
+@font-face {
+    font-family: NanumSquare;
+    font-style: normal;
+    font-weight: 700;
+    src: url("./fonts/NanumSquare-700.woff") format("woff");
+}
+
+* {box-sizing: border-box; margin: 0; padding: 0; font-family: inherit; font-style: normal; font-weight: inherit; font-size: inherit; line-height: inherit; text-decoration: inherit; color: inherit; vertical-align: top; outline: none;}
+
+html {width: 100%; height: 100%; -ms-touch-action: manipulation; touch-action: manipulation;}
+body {width: 100%; height: 100%; font-family: NanumSquare; font-weight: 400; font-size: 17px; line-height: 1.5; color: #666666; -webkit-font-smoothing: antialiased; /*font-smoothing: antialiased;*/ -webkit-tap-highlight-color: rgba(0, 0, 0, 0); -webkit-text-size-adjust: 100%; -webkit-print-color-adjust: exact;}
+
+table {width: 100%; border-spacing: 0; table-layout: fixed;}
+
+td, th {vertical-align: middle;}
+
+#outer {overflow: hidden; position: relative; width: 100%; min-width: 1100px; min-height: 100vh; padding: 50px 0; background: #eeeeee;}
+
+#inner {width: 1100px; padding: 100px 50px; margin: 0 auto; background: #ffffff;}
+#inner h1 {margin: 0 0 100px; font-weight: 700; font-size: 40px; color: #000000;}
+#inner h2 {margin: 0 0 20px; font-weight: 700; font-size: 24px; color: #000000;}
+#inner .greeting {margin: 0 0 100px;}
+#inner .greeting .txt strong {font-weight: 400; color: #000000;}
+#inner .greeting .link {display: inline-block; margin: 10px 0 0; color: #1d86dc;}
+
+#inner .options {margin: 0 0 100px;}
+#inner .options table thead tr th {padding: 15px; color: #000000; text-align: center; background: #f7f7f7;}
+#inner .options table tbody tr td {padding: 15px; text-align: center; border-bottom: 1px solid #dddddd;}
+
+#inner .methods {margin: 0 0 100px;}
+#inner .methods table thead tr th {padding: 15px; color: #000000; text-align: center; background: #f7f7f7;}
+#inner .methods table tbody tr td {padding: 15px; text-align: center; border-bottom: 1px solid #dddddd;}
+
+#inner .demowrap {margin: 0 0 100px;}
+#inner .demowrap .demo {width: 800px; margin: 0 auto 100px;}
+#inner .demowrap .demo:last-child {margin-bottom: 0;}
+#inner .demowrap .demo .desc {margin: 0 0 20px;}
+#inner .demowrap .demo .desc .tit {color: #000000;}
+#inner .demowrap .demo .desc .txt {margin: 10px 0 0;}
+#inner .demowrap .demo .source {margin: 30px 0 0; padding: 25px; border-radius: 15px; background: #1e1e1e; font-family: NanumGothic; font-size: 14px; line-height: 1.5; color: #ffffff; letter-spacing: 0.1em;}
+#inner .demowrap .demo .source .hljs-tag {color: #569cd6;}
+#inner .demowrap .demo .source .hljs-attr {color: #9cdcfe;}
+#inner .demowrap .demo .source .hljs-string {color: #ce723b;}
+#inner .demowrap .demo .source .hljs-number {color: #b5cea8;}
+#inner .demowrap .demo .source .hljs-selector-id {color: #d7983d;}
+#inner .demowrap .demo .source .hljs-selector-class {color: #d7983d;}
+#inner .demowrap .demo .source .hljs-attribute {color: #9cdcfe;}
+</style>
+    <div id="outer">
+        <div id="inner">
+            <h1>jQuery datepicker plugin - Kronos</h1>
+            <section class="greeting">
+                <h2>1. 개요</h2>
+                <p class="txt">데이트피커 플러그인 'Kronos' 입니다.<br>
+                날짜선택, 기간설정, 콜백함수등을 제공하고 있으며<br>
+                사용자피드백을 통해 지속적으로 업데이트 할 예정입니다.</p>
+                <a href="https://github.com/simplizm-company/kronos" class="link">소스 다운로드 (github)</a>
+            </section>
+            <section class="options">
+                <h2>2. 옵션표</h2>
+                <table>
+                    <colgroup>
+                        <col style="width: 15%;">
+                        <col style="width: 15%;">
+                        <col style="width: auto;">
+                        <col style="width: 15%;">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>옵션명</th>
+                            <th>옵션값 타입</th>
+                            <th>옵션 설명</th>
+                            <th>기본값</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="methods">
+                <h2>3. 메소드 (준비중입니다)</h2>
+            </section>
+            <section class="demowrap">
+                <h2>4. 데모 및 소스</h2>
+                <section class="demo">
+                    <div class="desc">
+                        <h3 class="tit">1. 기본 데이트피커</h3>
+                    </div>
+                    <div class="cont">
+                        <input type="text" id="kronos" style="width: 200px;">
+                        <script>
+                            $('#kronos').kronos();
+                        </script>
+                    </div>
+                </section>
+            </section>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                    url: 'index.html',
+                    timeout: 10000,
+                    dataType: 'html',
+                    success: function (data) {
+                        $(data).find('section.demo').each(function (i) {
+                            var code = $(this).children().eq(1).html();
+                            var $pre = $('<pre class="source"><code></code></pre>').appendTo($('section.demo').eq(i)).children('code');
+
+                            code = code.replace(/</gi, '&lt;').replace(/>/gi, '&gt;');
+                            code = code.substring(code.indexOf('\n') + 1);
+                            code = code.substring(code.lastIndexOf('\n') + 1, -1);
+                            var between = code.split('\n')[0].split(' ').length;
+                            var newCode = [];
+
+                            code.split('\n').forEach(function (self) {
+                                self = self.replace(self.substring(0, between - 5), '');
+                                newCode += '\n' + self;
+                            });
+
+                            newCode = newCode.substring(newCode.indexOf('\n') + 1);
+                            newCode = newCode.substring(newCode.lastIndexOf('\n') + 1, -1);
+
+                            $pre.html(newCode);
+                        }).promise().done(function () {
+                            $('pre > code').each(function () {
+                                hljs.highlightBlock(this);
+                            })
+                        });
+                    }
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>
