@@ -1,6 +1,7 @@
 @charset "utf-8"; 
 
 .kronos-outer {display: inline-block; position: relative;}
+.kronos-outer  * {box-sizing: border-box;}
 
 .kronos-outer .kronos-input {box-sizing: border-box; height: 30px; padding: 5px 10px; border: 1px solid #ccc;}
 .kronos-outer .kronos-input:focus, .kronos-outer .kronos-input:hover {border-color: #666;}
@@ -17,14 +18,15 @@
 .kronos-month-layer button:hover {border-color: #000000;}
 .kronos-month-layer button.kronos-active {border-color: #000000; background: #000000; color: #ffffff;}
 
-.kronos-year-layer {overflow: hidden; position: absolute; top: 48px; left: 0; z-index: 10; width: 100%; height: 0; background: #ffffff; transform: scale(1.2); opacity: 0; transition: transform 500ms, opacity 500ms;}
-.kronos-year-layer.kronos-visible {height: calc(100% - 48px); padding: 5%; transform: scale(1); opacity: 1;}
-.kronos-year-layer button {width: 30%; height: 20%; margin: 0 5% 5% 0; border: 1px solid #f7f7f7; border-radius: 5px; background: #f7f7f7; font-size: 12px; color: #000; vertical-align: middle; text-align: center; cursor: pointer;}
-.kronos-year-layer button:nth-child(3n) {margin-right: 0;}
-.kronos-year-layer button:hover {border-color: #000000;}
-.kronos-year-layer button.kronos-active {border-color: #000000; background: #000000; color: #ffffff;}
+.kronos-year-layer {overflow: hidden; position: absolute; top: 0; left: 0; z-index: 10; width: 100%; height: 0; background: #ffffff; transform: scale(1.2); opacity: 0; transition: transform 500ms, opacity 500ms;}
+.kronos-year-layer.kronos-visible {height: 100%; transform: scale(1); opacity: 1;}
+.kronos-year-layer .kronos-year-body {position: absolute; top: 48px; right: 0; bottom: 0; left: 0; padding: 10% 5%;}
+.kronos-year-layer .kronos-year-body button {width: 30%; height: 30%; margin: 0 5% 5% 0; border: 1px solid #f7f7f7; border-radius: 5px; background: #f7f7f7; font-size: 12px; color: #000; vertical-align: middle; text-align: center; cursor: pointer;}
+.kronos-year-layer .kronos-year-body button:nth-child(3n) {margin-right: 0;}
+.kronos-year-layer .kronos-year-body button:hover {border-color: #000000;}
+.kronos-year-layer .kronos-year-body button.kronos-active {border-color: #000000; background: #000000; color: #ffffff;}
 
-.kronos-animate {position: relative;}
+.kronos-date-layer {position: relative;}
 
 .kronos-inner {position: absolute; width: 100%; vertical-align: top;}
 

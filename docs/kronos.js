@@ -59,7 +59,7 @@
 
             _.opt = _.hasOwnProperty(defaults, settings);
             _.str = {}
-            _.sbj = {
+            _.initial = {
                 weekCount : 0,
                 oldY : false,
                 oldM : false
@@ -78,7 +78,7 @@
                 outer: '<div class="'+_.opt.nameSpace+'-outer" />',
                 trigger: '<button type="button" class="'+_.opt.nameSpace+'-trigger" title="'+_.opt.text.btnTrigger+'">'+_.opt.text.btnTrigger+'</button>',
                 viewer: '<div class="'+_.opt.nameSpace+'-viewer" />',
-                animate: '<div class="'+_.opt.nameSpace+'-animate" />',
+                dateLayer: '<div class="'+_.opt.nameSpace+'-date-layer" />',
                 monthLayer: '<div class="'+_.opt.nameSpace+'-month-layer" />',
                 yearLayer: '<div class="'+_.opt.nameSpace+'-year-layer" />',
                 btnPrevMonth: '<button type="button" class="'+_.opt.nameSpace+'-prev-month" title="'+_.opt.text.btnPrevMonth+'">'+_.opt.text.btnPrevMonth+'</button>',
@@ -118,27 +118,27 @@
     Kronos.prototype.checkFormat = function () {
         var _ = this;
 
-        _.sbj.indexYS = _.opt.format.indexOf('y');
-        _.sbj.indexYE = _.opt.format.lastIndexOf('y')+1;
-        _.sbj.indexMS = _.opt.format.indexOf('m');
-        _.sbj.indexME = _.opt.format.lastIndexOf('m')+1;
-        _.sbj.indexDS = _.opt.format.indexOf('d');
-        _.sbj.indexDE = _.opt.format.lastIndexOf('d')+1;
+        _.initial.indexYS = _.opt.format.indexOf('y');
+        _.initial.indexYE = _.opt.format.lastIndexOf('y')+1;
+        _.initial.indexMS = _.opt.format.indexOf('m');
+        _.initial.indexME = _.opt.format.lastIndexOf('m')+1;
+        _.initial.indexDS = _.opt.format.indexOf('d');
+        _.initial.indexDE = _.opt.format.lastIndexOf('d')+1;
 
-        _.sbj.formatY = String(_.opt.format.substring(_.sbj.indexYS, _.sbj.indexYE));
-        _.sbj.formatM = String(_.opt.format.substring(_.sbj.indexMS, _.sbj.indexME));
-        _.sbj.formatD = String(_.opt.format.substring(_.sbj.indexDS, _.sbj.indexDE));
+        _.initial.formatY = String(_.opt.format.substring(_.initial.indexYS, _.initial.indexYE));
+        _.initial.formatM = String(_.opt.format.substring(_.initial.indexMS, _.initial.indexME));
+        _.initial.formatD = String(_.opt.format.substring(_.initial.indexDS, _.initial.indexDE));
     }
 
     Kronos.prototype.getTodayDate = function () {
         var _ = this;
 
-        _.sbj.date        = new Date();
-        _.sbj.todayY    = _.sbj.date.getFullYear();
-        _.sbj.todayM    = _.sbj.date.getMonth();
-        _.sbj.todayD    = _.sbj.date.getDate();
-        _.sbj.dateLeng    = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        _.core.today    = String(_.sbj.todayY) + _.combineZero(_.sbj.todayM + 1) + _.combineZero(_.sbj.todayD);
+        _.initial.date        = new Date();
+        _.initial.todayY    = _.initial.date.getFullYear();
+        _.initial.todayM    = _.initial.date.getMonth();
+        _.initial.todayD    = _.initial.date.getDate();
+        _.initial.dateLeng    = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        _.core.today    = String(_.initial.todayY) + _.combineZero(_.initial.todayM + 1) + _.combineZero(_.initial.todayD);
     }
 
     Kronos.prototype.combineZero = function(number) {
@@ -180,8 +180,12 @@
 
         _.$viewer = _.$outer.append(_.node.viewer).children('.'+_.opt.nameSpace+'-viewer');
         _.$monthLayer = _.$viewer.append(_.node.monthLayer).children('.'+_.opt.nameSpace+'-month-layer');
+        _.$monthLayerHead = _.$monthLayer.append('<div class="'+_.opt.nameSpace+'-month-head">').children('.'+_.opt.nameSpace+'-month-head');
+        _.$monthLayerBody = _.$monthLayer.append('<div class="'+_.opt.nameSpace+'-month-body">').children('.'+_.opt.nameSpace+'-month-body');
         _.$yearLayer = _.$viewer.append(_.node.yearLayer).children('.'+_.opt.nameSpace+'-year-layer');
-        _.$animate = _.$viewer.append(_.node.animate).children('.'+_.opt.nameSpace+'-animate');
+        _.$yearLayerHead = _.$yearLayer.append('<div class="'+_.opt.nameSpace+'-year-head">').children('.'+_.opt.nameSpace+'-year-head');
+        _.$yearLayerBody = _.$yearLayer.append('<div class="'+_.opt.nameSpace+'-year-body">').children('.'+_.opt.nameSpace+'-year-body');
+        _.$dateLayer = _.$viewer.append(_.node.dateLayer).children('.'+_.opt.nameSpace+'-date-layer');
     }
 
     Kronos.prototype.inputInit = function () {
@@ -196,10 +200,10 @@
     Kronos.prototype.convertFormat = function(core) {
         var _ = this, f, y, m, d;
 
-        y = _.sbj.formatY.length === 2 ? String(core.substring(2, 4)) : String(core.substring(0, 4));
+        y = _.initial.formatY.length === 2 ? String(core.substring(2, 4)) : String(core.substring(0, 4));
         m = String(core.substring(4, 6));
         d = String(core.substring(6, 8));
-        f = _.opt.format.replace(_.sbj.formatY, y).replace(_.sbj.formatM, m).replace(_.sbj.formatD, d);
+        f = _.opt.format.replace(_.initial.formatY, y).replace(_.initial.formatM, m).replace(_.initial.formatD, d);
 
         return f;
     }
@@ -233,21 +237,21 @@
     Kronos.prototype.setDate = function () {
         var _ = this;
 
-        _.sbj.thisY = _.sbj.date.getFullYear();
-        _.sbj.thisM = _.sbj.date.getMonth();
-        _.str.thisM = _.combineZero(_.sbj.thisM + 1);
-        _.sbj.prevY = _.sbj.thisM === 0 ? _.sbj.thisY - 1 : _.sbj.thisY;
-        _.sbj.prevM = _.sbj.thisM === 0 ? 11 : _.sbj.thisM - 1;
-        _.sbj.nextY = _.sbj.thisM === 11 ? _.sbj.thisY + 1 : _.sbj.thisY;
-        _.sbj.nextM = _.sbj.thisM === 11 ? 0 : _.sbj.thisM + 1;
-        _.sbj.dateLeng[1] = (_.sbj.thisY % 4 === 0 && _.sbj.thisY % 100 !== 0) || _.sbj.thisY % 400 === 0 ? 29 : 28;
-        _.sbj.thisDateLeng = _.sbj.dateLeng[_.sbj.thisM];
-        _.sbj.titleYM = _.sbj.thisY + '. ' + _.str.thisM;
-        _.str.thisYM = _.sbj.thisY + _.str.thisM;
-        _.str.prevYM = _.sbj.prevY + _.combineZero(_.sbj.prevM + 1);
-        _.str.nextYM = _.sbj.nextY + _.combineZero(_.sbj.nextM + 1);
-        _.sbj.date.setDate(1);
-        _.sbj.firstDay = _.sbj.date.getDay();
+        _.initial.thisY = _.initial.date.getFullYear();
+        _.initial.thisM = _.initial.date.getMonth();
+        _.str.thisM = _.combineZero(_.initial.thisM + 1);
+        _.initial.prevY = _.initial.thisM === 0 ? _.initial.thisY - 1 : _.initial.thisY;
+        _.initial.prevM = _.initial.thisM === 0 ? 11 : _.initial.thisM - 1;
+        _.initial.nextY = _.initial.thisM === 11 ? _.initial.thisY + 1 : _.initial.thisY;
+        _.initial.nextM = _.initial.thisM === 11 ? 0 : _.initial.thisM + 1;
+        _.initial.dateLeng[1] = (_.initial.thisY % 4 === 0 && _.initial.thisY % 100 !== 0) || _.initial.thisY % 400 === 0 ? 29 : 28;
+        _.initial.thisDateLeng = _.initial.dateLeng[_.initial.thisM];
+        _.initial.titleYM = _.initial.thisY + '. ' + _.str.thisM;
+        _.str.thisYM = _.initial.thisY + _.str.thisM;
+        _.str.prevYM = _.initial.prevY + _.combineZero(_.initial.prevM + 1);
+        _.str.nextYM = _.initial.nextY + _.combineZero(_.initial.nextM + 1);
+        _.initial.date.setDate(1);
+        _.initial.firstDay = _.initial.date.getDay();
     }
 
     Kronos.prototype.getCoreDate = function () {
@@ -278,12 +282,12 @@
     Kronos.prototype.slideAnimate = function () {
         var _ = this;
 
-        _.$animate.animate({'left' : _.sbj.outerLeft}, 300, function () {
+        _.$dateLayer.animate({'left' : _.initial.outerLeft}, 500, function () {
             _.$oldInner.remove();
-            _.$animate.css({'left' : 0});
+            _.$dateLayer.css({'left' : 0});
             _.$newInner.removeClass('new').addClass('old').css({'left' : 0});
-            _.sbj.oldY = _.sbj.thisY;
-            _.sbj.oldM = _.sbj.thisM;
+            _.initial.oldY = _.initial.thisY;
+            _.initial.oldM = _.initial.thisM;
         });
     }
     
@@ -303,25 +307,25 @@
         var _ = this;
 
         switch(true) {
-            case !_.sbj.oldY || _.sbj.oldY === _.sbj.thisY && _.sbj.oldM === _.sbj.thisM :
-                _.sbj.innerLeft = '0px';
-                _.sbj.outerLeft = '0px';
+            case !_.initial.oldY || _.initial.oldY === _.initial.thisY && _.initial.oldM === _.initial.thisM :
+                _.initial.innerLeft = '0px';
+                _.initial.outerLeft = '0px';
                 break;
-            case _.sbj.oldY < _.sbj.thisY :
-                _.sbj.innerLeft = '100%';
-                _.sbj.outerLeft = '-100%';
+            case _.initial.oldY < _.initial.thisY :
+                _.initial.innerLeft = '100%';
+                _.initial.outerLeft = '-100%';
                 break;
-            case _.sbj.oldY > _.sbj.thisY :
-                _.sbj.innerLeft = '-100%';
-                _.sbj.outerLeft = '100%';
+            case _.initial.oldY > _.initial.thisY :
+                _.initial.innerLeft = '-100%';
+                _.initial.outerLeft = '100%';
                 break;
-            case _.sbj.oldM < _.sbj.thisM :
-                _.sbj.innerLeft = '100%';
-                _.sbj.outerLeft = '-100%';
+            case _.initial.oldM < _.initial.thisM :
+                _.initial.innerLeft = '100%';
+                _.initial.outerLeft = '-100%';
                 break;
             default :
-                _.sbj.innerLeft = '-100%';
-                _.sbj.outerLeft = '100%';
+                _.initial.innerLeft = '-100%';
+                _.initial.outerLeft = '100%';
                 break;
         }
     }
@@ -329,8 +333,10 @@
     Kronos.prototype.setLayoutMarkup = function () {
         var _ = this;
 
-        _.$oldInner = _.$animate.children('.'+_.opt.nameSpace+'-inner');
-        _.$newInner = _.$animate.append('<div class="'+_.opt.nameSpace+'-inner" style="left: '+_.sbj.innerLeft+'" />').children('.'+_.opt.nameSpace+'-inner:last-child')
+        console.log('setLayoutMarkup');
+
+        _.$oldInner = _.$dateLayer.children('.'+_.opt.nameSpace+'-inner');
+        _.$newInner = _.$dateLayer.append('<div class="'+_.opt.nameSpace+'-inner" style="left: '+_.initial.innerLeft+'" />').children('.'+_.opt.nameSpace+'-inner:last-child')
         _.$head = _.$newInner.append('<div class="'+_.opt.nameSpace+'-head" />').children('.'+_.opt.nameSpace+'-head');
         _.$body = _.$newInner.append('<div class="'+_.opt.nameSpace+'-body" />').children('.'+_.opt.nameSpace+'-body');
         _.$title = _.$head.append('<div class="'+_.opt.nameSpace+'-title" />').children('.'+_.opt.nameSpace+'-title');
@@ -342,8 +348,8 @@
         if (_.opt.select) {
             _.setSelectMarkup();
         } else {
-            _.$titleYear = _.$title.append('<button class="'+_.opt.nameSpace+'-title-year">'+_.sbj.thisY+_.opt.text.thisYear+'</button>').children('.'+_.opt.nameSpace+'-title-year');
-            _.$titleMonth = _.$title.append('<button class="'+_.opt.nameSpace+'-title-month">'+_.opt.text.month[_.sbj.thisM]+_.opt.text.thisMonth+'</button>').children('.'+_.opt.nameSpace+'-title-month');
+            _.$titleYear = _.$title.append('<button class="'+_.opt.nameSpace+'-title-year">'+_.initial.thisY+_.opt.text.thisYear+'</button>').children('.'+_.opt.nameSpace+'-title-year');
+            _.$titleMonth = _.$title.append('<button class="'+_.opt.nameSpace+'-title-month">'+_.opt.text.month[_.initial.thisM]+_.opt.text.thisMonth+'</button>').children('.'+_.opt.nameSpace+'-title-month');
         }
 
         if (_.opt.button.month) {
@@ -365,10 +371,10 @@
         var _ = this;
         
         _.node.selectYear = '<select class="'+_.opt.nameSpace+'-select-year">';
-        _.sbj.selectYearStart = _.sbj.todayY+_.opt.selectYear.start;
-        _.sbj.selectYearEnd = _.sbj.todayY+_.opt.selectYear.end;
-        for(var i = _.sbj.selectYearEnd; i >= _.sbj.selectYearStart; i--) {
-            _.node.selectYear += i === _.sbj.thisY ? '<option value="'+i+'" selected>'+i+'</option>' : '<option value="'+i+'">'+i+'</option>';
+        _.initial.selectYearStart = _.initial.todayY+_.opt.selectYear.start;
+        _.initial.selectYearEnd = _.initial.todayY+_.opt.selectYear.end;
+        for(var i = _.initial.selectYearEnd; i >= _.initial.selectYearStart; i--) {
+            _.node.selectYear += i === _.initial.thisY ? '<option value="'+i+'" selected>'+i+'</option>' : '<option value="'+i+'">'+i+'</option>';
         }
         _.node.selectYear += '</select>'+_.opt.text.thisYear;
         _.$selectYear = _.$title.append(_.node.selectYear).children('.'+_.opt.nameSpace+'-select-year');
@@ -376,7 +382,7 @@
 
         _.node.selectMonth = '<select class="'+_.opt.nameSpace+'-select-month">';
         for(var i = 1; i < 13; i++) {
-            _.node.selectMonth += i === (_.sbj.thisM+1) ? '<option value="'+i+'" selected>'+i+'</option>' : '<option value="'+i+'">'+i+'</option>';
+            _.node.selectMonth += i === (_.initial.thisM+1) ? '<option value="'+i+'" selected>'+i+'</option>' : '<option value="'+i+'">'+i+'</option>';
         }
         _.node.selectMonth += '</select>'+_.opt.text.thisMonth;
         _.$selectMonth = _.$title.append(_.node.selectMonth).children('.'+_.opt.nameSpace+'-select-month');
@@ -394,34 +400,34 @@
     }
 
     Kronos.prototype.setDateMarkup = function () {
-        var _ = this, pmFirstDay = _.sbj.dateLeng[_.sbj.prevM] - _.sbj.firstDay;
+        var _ = this, pmFirstDay = _.initial.dateLeng[_.initial.prevM] - _.initial.firstDay;
 
         _.node.markup += '<tbody><tr>';
 
-        for (var i = 1; i <= _.sbj.firstDay; i++) {
+        for (var i = 1; i <= _.initial.firstDay; i++) {
             _.node.markup += '<td><button type="button" core="'+_.str.prevYM+(pmFirstDay+i)+'" title="'+_.convertFormat(_.str.prevYM+(pmFirstDay+i))+'">'+(pmFirstDay+i)+'</button></td>';
-            _.sbj.weekCount++;
+            _.initial.weekCount++;
         }
 
-        for(var i = 1; i <= _.sbj.thisDateLeng; i++) {
-            if (_.sbj.weekCount === 0) {
+        for(var i = 1; i <= _.initial.thisDateLeng; i++) {
+            if (_.initial.weekCount === 0) {
                 _.node.markup += '<tr>';
             }
             _.node.markup += '<td><button type="button" core="'+_.str.thisYM+_.combineZero(i)+'" title="'+_.convertFormat(_.str.thisYM+_.combineZero(i))+'">'+i+'</button></td>';
-            _.sbj.weekCount++;
-            if (_.sbj.weekCount === 7) {
+            _.initial.weekCount++;
+            if (_.initial.weekCount === 7) {
                 _.node.markup += '</tr>';
-                _.sbj.weekCount = 0;
+                _.initial.weekCount = 0;
             }
         }
 
-        for (var i = 1; _.sbj.weekCount != 0; i++) {
-            if (_.sbj.weekCount === 7) {
+        for (var i = 1; _.initial.weekCount != 0; i++) {
+            if (_.initial.weekCount === 7) {
                 _.node.markup += '</tr>';
-                _.sbj.weekCount = 0;
+                _.initial.weekCount = 0;
             } else {
                 _.node.markup += '<td><button type="button" core="'+_.str.nextYM+_.combineZero(i)+'" title="'+_.convertFormat(_.str.nextYM+_.combineZero(i))+'">'+i+'</button></td>';
-                _.sbj.weekCount++;
+                _.initial.weekCount++;
             }
         }
 
@@ -435,13 +441,13 @@
 
         _.$monthLayer.empty();
         for (var i = 1; i <= 12; i++) {
-            _.$monthLayer.append('<button class="'+(_.sbj.thisM == i-1 ? 'kronos-active' : '')+'">'+i+'</button>');
+            _.$monthLayer.append('<button class="'+(_.initial.thisM == i-1 ? 'kronos-active' : '')+'">'+i+'</button>');
         }
         _.$btnMonth = _.$monthLayer.children('button');
 
         _.$btnMonth.on('click', function (e) {
             e.stopPropagation();
-            _.sbj.date.setMonth($(this).index());
+            _.initial.date.setMonth($(this).index());
             _.setDatepicker();
         });
     }
@@ -449,15 +455,15 @@
     Kronos.prototype.setYearMarkup = function () {
         var _ = this;
 
-        _.$yearLayer.empty();
-        for (var i = _.sbj.thisY - 5; i <= _.sbj.thisY + 6; i++) {
-            _.$yearLayer.append('<button class="'+(_.sbj.thisY == i ? 'kronos-active' : '')+'">'+i+'</button>');
+        _.$yearLayerBody.empty();
+        for (var i = _.initial.thisY - 4; i <= _.initial.thisY + 4; i++) {
+            _.$yearLayerBody.append('<button class="'+(_.initial.thisY == i ? 'kronos-active' : '')+'">'+i+'</button>');
         }
-        _.$btnYear = _.$yearLayer.children('button');
+        _.$btnYear = _.$yearLayerBody.children('button');
 
         _.$btnYear.on('click', function (e) {
             e.stopPropagation();
-            _.sbj.date.setFullYear($(this).text());
+            _.initial.date.setFullYear($(this).text());
             _.setDatepicker();
         });
     }
@@ -545,9 +551,9 @@
 
         console.log('close');
 
-        _.$animate.empty();
-        _.$monthLayer.empty();
-        _.$yearLayer.empty();
+        _.$dateLayer.empty();
+        _.$monthLayerBody.empty();
+        _.$yearLayerBody.empty();
         _.$outer.removeClass('open');
         _.$outer.off(_.keyupEvent);
         $(document).off(_.clickEvent);
@@ -627,9 +633,9 @@
 
         if (_.opt.button.month) {
             _.$btnPrevMonth.on('click', function () {
-                _.sbj.date.setMonth(_.sbj.date.getMonth()-1);
-                if (_.opt.select && _.sbj.date.getFullYear() < _.sbj.selectYearStart) {
-                    _.sbj.date.setMonth(_.sbj.date.getMonth()+1)
+                _.initial.date.setMonth(_.initial.date.getMonth()-1);
+                if (_.opt.select && _.initial.date.getFullYear() < _.initial.selectYearStart) {
+                    _.initial.date.setMonth(_.initial.date.getMonth()+1)
                     return false;
                 } else {
                     _.setDatepicker();
@@ -637,9 +643,9 @@
             });
 
             _.$btnNextMonth.on('click', function () {
-                _.sbj.date.setMonth(_.sbj.date.getMonth()+1);
-                if (_.opt.select && _.sbj.date.getFullYear() > _.sbj.selectYearEnd) {
-                    _.sbj.date.setMonth(_.sbj.date.getMonth()-1)
+                _.initial.date.setMonth(_.initial.date.getMonth()+1);
+                if (_.opt.select && _.initial.date.getFullYear() > _.initial.selectYearEnd) {
+                    _.initial.date.setMonth(_.initial.date.getMonth()-1)
                     return false;
                 } else {
                     _.setDatepicker();
@@ -649,9 +655,9 @@
 
         if (_.opt.button.year) {
             _.$btnPrevYear.on('click', function () {
-                _.sbj.date.setFullYear(_.sbj.thisY-1);
-                if (_.opt.select && _.sbj.thisY <= _.sbj.selectYearStart) {
-                    _.sbj.date.setFullYear(_.sbj.thisY);
+                _.initial.date.setFullYear(_.initial.thisY-1);
+                if (_.opt.select && _.initial.thisY <= _.initial.selectYearStart) {
+                    _.initial.date.setFullYear(_.initial.thisY);
                     return false;
                 } else {
                     _.setDatepicker();
@@ -659,9 +665,9 @@
             });
 
             _.$btnNextYear.on('click', function () {
-                _.sbj.date.setFullYear(_.sbj.thisY+1);
-                if (_.opt.select && _.sbj.thisY >= _.sbj.selectYearEnd) {
-                    _.sbj.date.setFullYear(_.sbj.thisY);
+                _.initial.date.setFullYear(_.initial.thisY+1);
+                if (_.opt.select && _.initial.thisY >= _.initial.selectYearEnd) {
+                    _.initial.date.setFullYear(_.initial.thisY);
                     return false;
                 } else {
                     _.setDatepicker();
@@ -671,11 +677,11 @@
 
         if (_.opt.button.today) {
             _.$btnToday.on('click', function () {
-                if (_.sbj.todayY === _.sbj.thisY && _.sbj.todayM === _.sbj.thisM) {
+                if (_.initial.todayY === _.initial.thisY && _.initial.todayM === _.initial.thisM) {
                     return false;
                 } else {
-                    _.sbj.date.setFullYear(_.sbj.todayY);
-                    _.sbj.date.setMonth(_.sbj.todayM);
+                    _.initial.date.setFullYear(_.initial.todayY);
+                    _.initial.date.setMonth(_.initial.todayM);
                     _.setDatepicker();
                 }
             });
@@ -687,12 +693,12 @@
 
         if (_.opt.select) {
             _.$selectYear.on('change', function () {
-                _.sbj.date.setFullYear($(this).val());
+                _.initial.date.setFullYear($(this).val());
                 _.setDatepicker();
             });
 
             _.$selectMonth.on('change', function () {
-                _.sbj.date.setMonth($(this).val()-1);
+                _.initial.date.setMonth($(this).val()-1);
                 _.setDatepicker();
             });
         }
