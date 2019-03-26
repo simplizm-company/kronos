@@ -79,6 +79,8 @@
                 trigger: '<button type="button" class="'+_.opt.nameSpace+'-trigger" title="'+_.opt.text.btnTrigger+'">'+_.opt.text.btnTrigger+'</button>',
                 viewer: '<div class="'+_.opt.nameSpace+'-viewer" />',
                 animate: '<div class="'+_.opt.nameSpace+'-animate" />',
+                monthLayer: '<div class="'+_.opt.nameSpace+'-month-layer" />',
+                yearLayer: '<div class="'+_.opt.nameSpace+'-year-layer" />',
                 btnPrevMonth: '<button type="button" class="'+_.opt.nameSpace+'-prev-month" title="'+_.opt.text.btnPrevMonth+'">'+_.opt.text.btnPrevMonth+'</button>',
                 btnNextMonth: '<button type="button" class="'+_.opt.nameSpace+'-next-month" title="'+_.opt.text.btnNextMonth+'">'+_.opt.text.btnNextMonth+'</button>',
                 btnPrevYear: '<button type="button" class="'+_.opt.nameSpace+'-prev-year" title="'+_.opt.text.btnPrevYear+'">'+_.opt.text.btnPrevYear+'</button>',
@@ -177,6 +179,8 @@
         }
 
         _.$viewer = _.$outer.append(_.node.viewer).children('.'+_.opt.nameSpace+'-viewer');
+        _.$monthLayer = _.$viewer.append(_.node.monthLayer).children('.'+_.opt.nameSpace+'-month-layer');
+        _.$yearLayer = _.$viewer.append(_.node.yearLayer).children('.'+_.opt.nameSpace+'-year-layer');
         _.$animate = _.$viewer.append(_.node.animate).children('.'+_.opt.nameSpace+'-animate');
     }
 
@@ -200,6 +204,13 @@
         return f;
     }
 
+    Kronos.prototype.resetMnyLayer = function () {
+        var _ = this;
+
+        _.$monthLayer.removeClass('kronos-visible');
+        _.$yearLayer.removeClass('kronos-visible');
+    }
+
     Kronos.prototype.setDatepicker = function () {
         var _ = this;
 
@@ -209,8 +220,10 @@
         _.setDateClass();
         _.onClickDate();
         _.onClickButton();
+        _.onClickTitle();
         _.onChangeSelect();
         _.slideAnimate();
+        _.resetMnyLayer();
 
         if (_.initFlag) {
             _.$input.focus();
@@ -282,6 +295,8 @@
         _.setNaviMarkup();
         _.setDaysMarkup();
         _.setDateMarkup();
+        _.setMonthMarkup();
+        _.setYearMarkup();
     }
 
     Kronos.prototype.setPositionLeft = function () {
@@ -327,8 +342,8 @@
         if (_.opt.select) {
             _.setSelectMarkup();
         } else {
-            _.$title.append('<div class="'+_.opt.nameSpace+'-title-year">'+_.sbj.thisY+_.opt.text.thisYear+'</div>');
-            _.$title.append('<div class="'+_.opt.nameSpace+'-title-month">'+_.opt.text.month[_.sbj.thisM]+_.opt.text.thisMonth+'</div>');
+            _.$titleYear = _.$title.append('<button class="'+_.opt.nameSpace+'-title-year">'+_.sbj.thisY+_.opt.text.thisYear+'</button>').children('.'+_.opt.nameSpace+'-title-year');
+            _.$titleMonth = _.$title.append('<button class="'+_.opt.nameSpace+'-title-month">'+_.opt.text.month[_.sbj.thisM]+_.opt.text.thisMonth+'</button>').children('.'+_.opt.nameSpace+'-title-month');
         }
 
         if (_.opt.button.month) {
@@ -415,6 +430,38 @@
         _.$viewer.css({'height' : _.$newInner.outerHeight()});
     }
 
+    Kronos.prototype.setMonthMarkup = function () {
+        var _ = this;
+
+        _.$monthLayer.empty();
+        for (var i = 1; i <= 12; i++) {
+            _.$monthLayer.append('<button class="'+(_.sbj.thisM == i-1 ? 'kronos-active' : '')+'">'+i+'</button>');
+        }
+        _.$btnMonth = _.$monthLayer.children('button');
+
+        _.$btnMonth.on('click', function (e) {
+            e.stopPropagation();
+            _.sbj.date.setMonth($(this).index());
+            _.setDatepicker();
+        });
+    }
+
+    Kronos.prototype.setYearMarkup = function () {
+        var _ = this;
+
+        _.$yearLayer.empty();
+        for (var i = _.sbj.thisY - 5; i <= _.sbj.thisY + 6; i++) {
+            _.$yearLayer.append('<button class="'+(_.sbj.thisY == i ? 'kronos-active' : '')+'">'+i+'</button>');
+        }
+        _.$btnYear = _.$yearLayer.children('button');
+
+        _.$btnYear.on('click', function (e) {
+            e.stopPropagation();
+            _.sbj.date.setFullYear($(this).text());
+            _.setDatepicker();
+        });
+    }
+
     Kronos.prototype.setDateClass = function () {
         var _ = this;
 
@@ -481,6 +528,7 @@
 
         _.$outer.on(_.keyupEvent, function(e) {
             if (e.keyCode === 27) {
+                console.log('2');
                 _.closeDatepicker();
             }
         });
@@ -495,7 +543,11 @@
     Kronos.prototype.closeDatepicker = function () {
         var _ = this;
 
+        console.log('close');
+
         _.$animate.empty();
+        _.$monthLayer.empty();
+        _.$yearLayer.empty();
         _.$outer.removeClass('open');
         _.$outer.off(_.keyupEvent);
         $(document).off(_.clickEvent);
@@ -545,10 +597,29 @@
                         _.$to.kronos('setDateClass');
                     }
                 } else {
+                    console.log('3');
                     _.closeDatepicker();
                 }
             }
         });
+    }
+
+    Kronos.prototype.onClickTitle = function () {
+        var _ = this;
+
+        if (_.$titleMonth) {
+            _.$titleMonth.on('click', function () {
+                _.$monthLayer.addClass('kronos-visible');
+                _.$yearLayer.removeClass('kronos-visible');
+            });
+        }
+
+        if (_.$titleYear) {
+            _.$titleYear.on('click', function () {
+                _.$yearLayer.addClass('kronos-visible');
+                _.$monthLayer.removeClass('kronos-visible');
+            });
+        }
     }
 
     Kronos.prototype.onClickButton = function () {

@@ -10,6 +10,20 @@
 
 .kronos-viewer {overflow: hidden; position: absolute; top: -9999em; left: -9999em; width: 300px; background: #fff; box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2); transition: height 0.3s;}
 
+.kronos-month-layer {overflow: hidden; position: absolute; top: 48px; left: 0; z-index: 10; width: 100%; height: 0; background: #ffffff; transform: scale(1.2); opacity: 0; transition: transform 500ms, opacity 500ms;}
+.kronos-month-layer.kronos-visible {height: calc(100% - 48px); padding: 5%; transform: scale(1); opacity: 1;}
+.kronos-month-layer button {width: 30%; height: 20%; margin: 0 5% 5% 0; border: 1px solid #f7f7f7; border-radius: 5px; background: #f7f7f7; font-size: 12px; color: #000; vertical-align: middle; text-align: center; cursor: pointer;}
+.kronos-month-layer button:nth-child(3n) {margin-right: 0;}
+.kronos-month-layer button:hover {border-color: #000000;}
+.kronos-month-layer button.kronos-active {border-color: #000000; background: #000000; color: #ffffff;}
+
+.kronos-year-layer {overflow: hidden; position: absolute; top: 48px; left: 0; z-index: 10; width: 100%; height: 0; background: #ffffff; transform: scale(1.2); opacity: 0; transition: transform 500ms, opacity 500ms;}
+.kronos-year-layer.kronos-visible {height: calc(100% - 48px); padding: 5%; transform: scale(1); opacity: 1;}
+.kronos-year-layer button {width: 30%; height: 20%; margin: 0 5% 5% 0; border: 1px solid #f7f7f7; border-radius: 5px; background: #f7f7f7; font-size: 12px; color: #000; vertical-align: middle; text-align: center; cursor: pointer;}
+.kronos-year-layer button:nth-child(3n) {margin-right: 0;}
+.kronos-year-layer button:hover {border-color: #000000;}
+.kronos-year-layer button.kronos-active {border-color: #000000; background: #000000; color: #ffffff;}
+
 .kronos-animate {position: relative;}
 
 .kronos-inner {position: absolute; width: 100%; vertical-align: top;}
@@ -18,8 +32,10 @@
 
 .kronos-head {overflow: hidden; position: relative; padding: 12px;}
 .kronos-head .kronos-title {text-align: center; line-height: 24px;}
-.kronos-head .kronos-title-year {display: inline-block;}
-.kronos-head .kronos-title-month {display: inline-block; margin: 0 0 0 5px;}
+.kronos-head .kronos-title button {border: none; background: none; cursor: pointer;}
+.kronos-head .kronos-title button:hover {border: none;}
+.kronos-head .kronos-title .kronos-title-year {display: inline-block;}
+.kronos-head .kronos-title .kronos-title-month {display: inline-block; margin: 0 0 0 5px;}
 
 .kronos-head select {height: 24px; padding: 0 5px; border: 1px solid #ccc; border-radius: 3px; background-position: right 5px center;}
 .kronos-head select:focus {border-color: #666;}
@@ -27,8 +43,8 @@
 .kronos-head .kronos-select-year {width: 80px; margin: 0 5px 0 0;}
 .kronos-head .kronos-select-month {width: 50px; margin: 0 5px;}
 
-.kronos-head button {position: absolute; top: 12px; width: 24px; height: 24px; border: none; border-radius: 3px; text-indent: -9999em; cursor: pointer;}
-.kronos-head button:focus, .kronos-head button:hover {border: 1px solid #ddd;}
+.kronos-head > button {position: absolute; top: 12px; width: 24px; height: 24px; border: none; border-radius: 3px; text-indent: -9999em; cursor: pointer;}
+.kronos-head > button:focus, .kronos-head button:hover {border: 1px solid #ddd;}
 
 .kronos-head .kronos-prev-month {left: 36px; background: url(images/prev-month.png) center center no-repeat;}
 .kronos-head .kronos-next-month {right: 36px; background: url(images/next-month.png) center center no-repeat;}
