@@ -184,38 +184,11 @@ td, th {vertical-align: middle;}
                             <td>false</td>
                         </tr>
                         <tr>
-                            <td>button</td>
-                            <td>boolean</td>
-                            <td>각종버튼의 사용 여부를 정합니다.<br>
-                                <a href="#kronos5">데모 보러가기</a></td>
-                            <td>
-                                month : true<br>
-                                year : true<br>
-                                trigger : false<br>
-                                today : false
-                            </td>
-                        </tr>
-                        <tr>
                             <td>text</td>
                             <td>string</td>
                             <td>각종텍스트를 재정의 합니다.<br>
-                                <a href="#kronos7">데모 보러가기</a></td>
+                                <a href="#kronos5">데모 보러가기</a></td>
                             <td>js파일 참고</td>
-                        </tr>
-                        <tr>
-                            <td>select</td>
-                            <td>boolean</td>
-                            <td>년, 월 select 사용 여부</td>
-                            <td>false</td>
-                        </tr>
-                        <tr>
-                            <td>selectYear</td>
-                            <td>number</td>
-                            <td>select옵션을 사용할 때 년도의 범위를 지정</td>
-                            <td>
-                                start: -100,<br>
-                                end: 0
-                            </td>
                         </tr>
                         <tr>
                             <td>periodFrom,<br>periodTo</td>
@@ -227,7 +200,7 @@ td, th {vertical-align: middle;}
                             <td>date</td>
                             <td>array</td>
                             <td>공휴일 및 비활성화 날짜 지정<br>
-                                <a href="#kronos10">데모 보러가기</a></td>
+                                <a href="#kronos7">데모 보러가기</a></td>
                             <td>
                                 disabled: [],<br>
                                 holiday: []
@@ -322,9 +295,9 @@ td, th {vertical-align: middle;}
                         <h3 class="tit">5. 각종 텍스트 수정</h3>
                     </div>
                     <div class="cont">
-                        <input type="text" id="kronos7" style="width: 200px;">
+                        <input type="text" id="kronos5" style="width: 200px;">
                         <script>
-                            $('#kronos7').kronos({
+                            $('#kronos5').kronos({
                                 text : {
                                     thisMonth : '.',
                                     thisYear : '.',
@@ -346,14 +319,14 @@ td, th {vertical-align: middle;}
                         <h3 class="tit">6. 기간선택</h3>
                     </div>
                     <div class="cont">
-                        <input type="text" id="kronos9-1" style="width: 200px;">
-                        <input type="text" id="kronos9-2" style="width: 200px;">
+                        <input type="text" id="kronos6-1" style="width: 200px;">
+                        <input type="text" id="kronos6-2" style="width: 200px;">
                         <script>
-                            $('#kronos9-1').kronos({
-                                periodTo: '#kronos9-2'
+                            $('#kronos6-1').kronos({
+                                periodTo: '#kronos6-2'
                             });
-                            $('#kronos9-2').kronos({
-                                periodFrom: '#kronos9-1'
+                            $('#kronos6-2').kronos({
+                                periodFrom: '#kronos6-1'
                             });
                         </script>
                     </div>
@@ -365,9 +338,9 @@ td, th {vertical-align: middle;}
                         년도를 제외한 4자리 숫자일 경우 매년 반복 적용</p>
                     </div>
                     <div class="cont">
-                        <input type="text" id="kronos10" style="width: 200px;">
+                        <input type="text" id="kronos7" style="width: 200px;">
                         <script>
-                            $('#kronos10').kronos({
+                            $('#kronos7').kronos({
                                 date: {
                                     disabled : ['20180105', '0106'],
                                     holiday : ['0101', '0301', '0505', '1225', '20180108']
@@ -381,9 +354,9 @@ td, th {vertical-align: middle;}
                         <h3 class="tit">8. 데이트피커 고정</h3>
                     </div>
                     <div class="cont">
-                        <input type="text" id="kronos11" style="width: 200px;">
+                        <input type="text" id="kronos8" style="width: 200px;">
                         <script>
-                            $('#kronos11').kronos({
+                            $('#kronos8').kronos({
                                 visible: true
                             });
                         </script>
@@ -394,21 +367,21 @@ td, th {vertical-align: middle;}
                         <h3 class="tit">9. 고정 + 기간 설정</h3>
                     </div>
                     <div class="cont">
-                        <input type="text" id="kronos12-1" style="width: 200px;">
-                        <input type="text" id="kronos12-2" style="width: 200px;">
+                        <input type="text" id="kronos9-1" style="width: 200px;">
+                        <input type="text" id="kronos9-2" style="width: 200px;">
                         <button type="button" id="reset">reset button</button>
                         <script>
-                            $('#kronos12-1').kronos({
+                            $('#kronos9-1').kronos({
                                 visible : true,
                                 periodTo : '#kronos12-2'
                             });
-                            $('#kronos12-2').kronos({
+                            $('#kronos9-2').kronos({
                                 visible : true,
                                 periodFrom : '#kronos12-1'
                             });
                             $('#reset').on('click', function(){
-                                $('#kronos12-1').kronos('resetPeriod');
-                                $('#kronos12-2').kronos('resetPeriod');
+                                $('#kronos9-1').kronos('resetPeriod');
+                                $('#kronos9-2').kronos('resetPeriod');
                             });
                         </script>
                     </div>
@@ -418,9 +391,9 @@ td, th {vertical-align: middle;}
                         <h3 class="tit">10. 밸류값 변경 시 콜백</h3>
                     </div>
                     <div class="cont">
-                        <input type="text" id="kronos13" style="width: 200px;">
+                        <input type="text" id="kronos10" style="width: 200px;">
                         <script>
-                            $('#kronos13').kronos({
+                            $('#kronos10').kronos({
                                 onChange: function(date){
                                     alert(date);
                                 }
