@@ -278,9 +278,10 @@
         // 달력 열기
         var _ = this;
         _.setDateInit(0); // 데이트피커 하위 마크업
-        _.element.common.outer.addClass('kronos-open');
         _.element.year.outer.addClass('kronos-outer-scale-h');
         _.element.month.outer.addClass('kronos-outer-scale-h');
+        _.element.date.outer.removeClass('kronos-outer-scale-r');
+        _.element.common.outer.addClass('kronos-open');
         // onEvents
         _.eventsRegister.close(_);
     }
@@ -288,9 +289,9 @@
     Kronos.prototype.closeDatepicker = function () {
         // 달력 닫기
         var _ = this;
-        _.element.year.outer.empty();
-        _.element.month.outer.empty();
-        _.element.date.outer.empty();
+        _.element.year.outer.empty().addClass('kronos-outer-scale-h');
+        _.element.month.outer.empty().addClass('kronos-outer-scale-h');
+        _.element.date.outer.empty().removeClass('kronos-outer-scale-r');
         _.element.common.outer.removeClass('kronos-open');
         // offEvents
         $(document).off(_.events.click);
