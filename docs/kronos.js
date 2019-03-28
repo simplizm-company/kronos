@@ -14,11 +14,11 @@
         var fnidx = 0;
 
         function kronos(element, settings){
-            var _ = this, settings = settings === undefined ? {} : settings;
+            var _ = this;
+            var settings = settings === undefined ? {} : settings;
 
             var defaults = {
                 initDate: null,
-                nameSpace: 'kronos',
                 format: 'yyyy-mm-dd',
                 visible: false,
                 disableWeekends : false,
@@ -27,8 +27,6 @@
                     thisYear : '년',
                     days : ['일', '월', '화', '수', '목', '금', '토'],
                     month : ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
-                    btnToday : '오늘로',
-                    btnTrigger : '날짜 선택하기',
 
                     btnDatePrev: '이전 달',
                     btnDateNext: '다음 달',
@@ -38,11 +36,6 @@
 
                     btnYearPrev: '이전 해 그룹',
                     btnYearNext: '다음 해 그룹'
-                },
-                select: false,
-                selectYear : {
-                    start : -100,
-                    end : 0
                 },
                 periodFrom: false,
                 periodTo: false,
@@ -74,12 +67,7 @@
 
                 weekCount: 0,
 
-                oldY: false,
-                oldM: false,
-
-                actionFlag: false,
-
-                dateAnimateType: null
+                actionFlag: false
             };
 
             _.strings = {}
@@ -700,7 +688,7 @@
         _.corevar.toC = null;
         _.corevar.toF = null;
 
-        _.setDateClass();
+        _.setDateClasses();
     }
 
     $.fn.kronos = function () {
