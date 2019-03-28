@@ -70,4 +70,4 @@
 .kronos-outer-scale-h {transform: scale(1.5); opacity: 0; height: 0;}
 
 .kronos-outer-show {transition: transform 500ms, opacity 500ms, height 1ms;}
-.kronos-outer-hide {transition: transform 500ms, opacity 500ms, height 1ms 5000ms;}
+.kronos-outer-hide {transition: transform 500ms, opacity 500ms, height 1ms 500ms;}

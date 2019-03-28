@@ -49,62 +49,51 @@
             _.options = _.hasOwnProperty(defaults, settings);
             _.initial = {
                 fnidx: ++fnidx,
-                indexYS: null,
-                indexYE: null,
-                indexMS: null,
-                indexME: null,
-                indexDS: null,
-                indexDE: null,
-                formatY: null,
-                formatM: null,
-                formatD: null,
                 weekCount: 0,
                 actionFlag: false
             };
             _.strings = {}
-            _.corevar = {
-                today: null
-            }
+            _.corevar = {}
             _.events = {
                 click: 'click.kronos'+_.initial.fnidx
             }
             _.markups = {
                 common: {
-                    outer: `<div class="kronos-outer">`,
-                    inner: `<div class="kronos-inner">`
+                    outer: '<div class="kronos-outer">',
+                    inner: '<div class="kronos-inner">'
                 },
                 year: {
-                    outer: `<div class="kronos-year-outer">`,
-                    inner: `<div class="kronos-year-inner">`,
+                    outer: '<div class="kronos-year-outer">',
+                    inner: '<div class="kronos-year-inner">',
 
-                    head: `<div class="kronos-year-head">`,
-                    body: `<div class="kronos-year-body">`,
-                    title: `<button class="kronos-year-title"></button>`,
+                    head: '<div class="kronos-year-head">',
+                    body: '<div class="kronos-year-body">',
+                    title: '<button class="kronos-year-title"></button>',
 
-                    prev: `<button type="button" class="kronos-year-prev" title="${_.options.text.btnYearPrev}">${_.options.text.btnYearPrev}</button>`,
-                    next: `<button type="button" class="kronos-year-next" title="${_.options.text.btnYearNext}">${_.options.text.btnYearNext}</button>`
+                    prev: '<button type="button" class="kronos-year-prev" title="'+_.options.text.btnYearPrev+'">'+_.options.text.btnYearPrev+'</button>',
+                    next: '<button type="button" class="kronos-year-next" title="'+_.options.text.btnYearNext+'">'+_.options.text.btnYearNext+'</button>'
                 },
                 month: {
-                    outer: `<div class="kronos-month-outer">`,
-                    inner: `<div class="kronos-month-inner">`,
+                    outer: '<div class="kronos-month-outer">',
+                    inner: '<div class="kronos-month-inner">',
 
-                    head: `<div class="kronos-month-head">`,
-                    body: `<div class="kronos-month-body">`,
-                    title: `<button class="kronos-month-title"></button>`,
+                    head: '<div class="kronos-month-head">',
+                    body: '<div class="kronos-month-body">',
+                    title: '<button class="kronos-month-title"></button>',
 
-                    prev: `<button type="button" class="kronos-month-prev" title="${_.options.text.btnMonthPrev}">${_.options.text.btnMonthPrev}</button>`,
-                    next: `<button type="button" class="kronos-month-next" title="${_.options.text.btnMonthNext}">${_.options.text.btnMonthNext}</button>`
+                    prev: '<button type="button" class="kronos-month-prev" title="'+_.options.text.btnMonthPrev+'">'+_.options.text.btnMonthPrev+'</button>',
+                    next: '<button type="button" class="kronos-month-next" title="'+_.options.text.btnMonthNext+'">'+_.options.text.btnMonthNext+'</button>'
                 },
                 date: {
-                    outer: `<div class="kronos-date-outer">`,
-                    inner: `<div class="kronos-date-inner">`,
+                    outer: '<div class="kronos-date-outer">',
+                    inner: '<div class="kronos-date-inner">',
 
-                    head: `<div class="kronos-date-head">`,
-                    body: `<div class="kronos-date-body">`,
-                    title: `<button class="kronos-date-title"></button>`,
+                    head: '<div class="kronos-date-head">',
+                    body: '<div class="kronos-date-body">',
+                    title: '<button class="kronos-date-title"></button>',
 
-                    prev: `<button type="button" class="kronos-date-prev" title="${_.options.text.btnDatePrev}">${_.options.text.btnDatePrev}</button>`,
-                    next: `<button type="button" class="kronos-date-next" title="${_.options.text.btnDateNext}">${_.options.text.btnDateNext}</button>`,
+                    prev: '<button type="button" class="kronos-date-prev" title="'+_.options.text.btnDatePrev+'">'+_.options.text.btnDatePrev+'</button>',
+                    next: '<button type="button" class="kronos-date-next" title="'+_.options.text.btnDateNext+'">'+_.options.text.btnDateNext+'</button>',
 
                     content: null
                 }
@@ -357,7 +346,7 @@
             _.element.month.inner = null;
         });
         _.setMonthMarkup(delta);
-        _.element.month.title = _.element.month.head.append(_.markups.month.title).children('.kronos-month-title').text(_.initial.thisY);
+        _.element.month.title = _.element.month.head.append(_.markups.month.title).children('.kronos-month-title').text(_.initial.thisY+_.options.text.thisYear);
         // onEvents
         _.eventsRegister.month(_);
     }
