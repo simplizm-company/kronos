@@ -622,10 +622,14 @@
                     }
                 });
                 _.element.date.next.on(_.events.click, function () {
-                    _.setDateInit(1);
+                    if (!_.initial.actionFlag) {
+                        _.setDateInit(1);
+                    }
                 });
                 _.element.date.prev.on(_.events.click, function () {
-                    _.setDateInit(-1);
+                    if (!_.initial.actionFlag) {
+                        _.setDateInit(-1);
+                    }
                 });
             },
             month: function (_) {
@@ -641,10 +645,14 @@
                     _.visibleMotion('in', _.element.date.outer, _.element.month.outer);
                 });
                 _.element.month.next.on(_.events.click, function () {
-                    _.setMonthInit(1);
+                    if (!_.initial.actionFlag) {
+                        _.setMonthInit(1);
+                    }
                 });
                 _.element.month.prev.on(_.events.click, function () {
-                    _.setMonthInit(-1);
+                    if (!_.initial.actionFlag) {
+                        _.setMonthInit(-1);
+                    }
                 });
             },
             year: function (_) {
@@ -656,10 +664,14 @@
                     _.visibleMotion('in', _.element.month.outer, _.element.year.outer);
                 });
                 _.element.year.next.on(_.events.click, function () {
-                    _.setYearInit(1);
+                    if (!_.initial.actionFlag) {
+                        _.setYearInit(1);
+                    }
                 });
                 _.element.year.prev.on(_.events.click, function () {
-                    _.setYearInit(-1);
+                    if (!_.initial.actionFlag) {
+                        _.setYearInit(-1);
+                    }
                 });
             }
         }
