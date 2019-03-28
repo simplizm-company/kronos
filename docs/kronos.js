@@ -22,12 +22,6 @@
                 format: 'yyyy-mm-dd',
                 visible: false,
                 disableWeekends : false,
-                button: {
-                    month : true,
-                    year : true,
-                    trigger : false,
-                    today : false
-                },
                 text: {
                     thisMonth : '월',
                     thisYear : '년',
@@ -35,10 +29,15 @@
                     month : ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
                     btnToday : '오늘로',
                     btnTrigger : '날짜 선택하기',
-                    btnPrevMonth : '이전달',
-                    btnNextMonth : '다음달',
-                    btnPrevYear : '이전해',
-                    btnNextYear : '다음해'
+
+                    btnDatePrev: '이전 달',
+                    btnDateNext: '다음 달',
+
+                    btnMonthPrev: '이전 해',
+                    btnMonthNext: '다음 해',
+
+                    btnYearPrev: '이전 해 그룹',
+                    btnYearNext: '다음 해 그룹'
                 },
                 select: false,
                 selectYear : {
@@ -57,50 +56,111 @@
                 }
             }
 
-            _.opt = _.hasOwnProperty(defaults, settings);
-            _.str = {}
+            _.options = _.hasOwnProperty(defaults, settings);
+
             _.initial = {
-                weekCount : 0,
-                oldY : false,
-                oldM : false
+                fnidx: ++fnidx,
+
+                indexYS: null,
+                indexYE: null,
+                indexMS: null,
+                indexME: null,
+                indexDS: null,
+                indexDE: null,
+
+                formatY: null,
+                formatM: null,
+                formatD: null,
+
+                weekCount: 0,
+
+                oldY: false,
+                oldM: false,
+
+                actionFlag: false,
+
+                dateAnimateType: null
             };
-            _.$input = $(element).attr('readonly', 'readonly').addClass(_.opt.nameSpace+'-input');
-            _.$from = _.opt.periodFrom ? $(_.opt.periodFrom) : false;
-            _.$to = _.opt.periodTo ? $(_.opt.periodTo) : false;
 
-            _.core = {
-                today : null,
-                input : null,
-                from : null,
-                to : null
-            }
-            _.node = {
-                outer: '<div class="'+_.opt.nameSpace+'-outer" />',
-                trigger: '<button type="button" class="'+_.opt.nameSpace+'-trigger" title="'+_.opt.text.btnTrigger+'">'+_.opt.text.btnTrigger+'</button>',
-                viewer: '<div class="'+_.opt.nameSpace+'-viewer" />',
-                dateLayer: '<div class="'+_.opt.nameSpace+'-date-layer" />',
-                monthLayer: '<div class="'+_.opt.nameSpace+'-month-layer" />',
-                yearLayer: '<div class="'+_.opt.nameSpace+'-year-layer" />',
-                btnPrevMonth: '<button type="button" class="'+_.opt.nameSpace+'-prev-month" title="'+_.opt.text.btnPrevMonth+'">'+_.opt.text.btnPrevMonth+'</button>',
-                btnNextMonth: '<button type="button" class="'+_.opt.nameSpace+'-next-month" title="'+_.opt.text.btnNextMonth+'">'+_.opt.text.btnNextMonth+'</button>',
-                btnPrevYear: '<button type="button" class="'+_.opt.nameSpace+'-prev-year" title="'+_.opt.text.btnPrevYear+'">'+_.opt.text.btnPrevYear+'</button>',
-                btnNextYear: '<button type="button" class="'+_.opt.nameSpace+'-next-year" title="'+_.opt.text.btnNextYear+'">'+_.opt.text.btnNextYear+'</button>',
-                btnToday: '<button type="button" class="'+_.opt.nameSpace+'-today" title="'+_.opt.text.btnToday+'">'+_.opt.text.btnToday+'</button>'
+            _.strings = {}
+
+            _.corevar = {
+                today: null
             }
 
-            _.fnidx = fnidx++;
-            _.keyupEvent = 'keyup.kronos'+_.fnidx,
-            _.clickEvent = 'click.kronos'+_.fnidx;
+            _.events = {
+                click: 'click.kronos'+_.initial.fnidx
+            }
 
-            _.init(true);
+            _.markups = {
+                common: {
+                    outer: `<div class="kronos-outer">`,
+                    inner: `<div class="kronos-inner">`
+                },
+                year: {
+                    outer: `<div class="kronos-year-outer">`,
+                    inner: `<div class="kronos-year-inner">`,
+
+                    head: `<div class="kronos-year-head">`,
+                    body: `<div class="kronos-year-body">`,
+                    title: `<button class="kronos-year-title"></button>`,
+
+                    prev: `<button type="button" class="kronos-year-prev" title="${_.options.text.btnYearPrev}">${_.options.text.btnYearPrev}</button>`,
+                    next: `<button type="button" class="kronos-year-next" title="${_.options.text.btnYearNext}">${_.options.text.btnYearNext}</button>`
+                },
+                month: {
+                    outer: `<div class="kronos-month-outer">`,
+                    inner: `<div class="kronos-month-inner">`,
+
+                    head: `<div class="kronos-month-head">`,
+                    body: `<div class="kronos-month-body">`,
+                    title: `<button class="kronos-month-title"></button>`,
+
+                    prev: `<button type="button" class="kronos-month-prev" title="${_.options.text.btnMonthPrev}">${_.options.text.btnMonthPrev}</button>`,
+                    next: `<button type="button" class="kronos-month-next" title="${_.options.text.btnMonthNext}">${_.options.text.btnMonthNext}</button>`
+                },
+                date: {
+                    outer: `<div class="kronos-date-outer">`,
+                    inner: `<div class="kronos-date-inner">`,
+
+                    head: `<div class="kronos-date-head">`,
+                    body: `<div class="kronos-date-body">`,
+                    title: `<button class="kronos-date-title"></button>`,
+
+                    prev: `<button type="button" class="kronos-date-prev" title="${_.options.text.btnDatePrev}">${_.options.text.btnDatePrev}</button>`,
+                    next: `<button type="button" class="kronos-date-next" title="${_.options.text.btnDateNext}">${_.options.text.btnDateNext}</button>`,
+
+                    content: null
+                }
+            }
+
+            _.element = {
+                kronos: $(element).attr('readonly', 'readonly').addClass('kronos-input'),
+                kronosF: _.options.periodFrom ? $(_.options.periodFrom) : false,
+                kronosT: _.options.periodTo ? $(_.options.periodTo) : false,
+                common: {},
+                year: {},
+                month: {},
+                date: {}
+            }
+
+            _.init();
         }
 
         return kronos;
     }());
 
+    // start : util function =================================================================================================================================
+    Kronos.prototype.combineZero = function(number) {
+        return String(number).length == 1 ? '0' + String(number) : String(number);
+    }
+
+    Kronos.prototype.combineCore = function(year, month, date) {
+        return String(year)+String(month)+String(date);
+    }
+
     Kronos.prototype.hasOwnProperty = function(org, src) {
         var _ = this;
-
         for(var prop in src) {
             if (!Object.prototype.hasOwnProperty.call(src, prop)) {
                 continue;
@@ -111,45 +171,21 @@
                 org[prop] = src[prop];
             }
         }
-
         return org;
     }
 
-    Kronos.prototype.checkFormat = function () {
-        var _ = this;
+    Kronos.prototype.convertFormat = function(core) {
+        var _ = this, f, y, m, d;
 
-        _.initial.indexYS = _.opt.format.indexOf('y');
-        _.initial.indexYE = _.opt.format.lastIndexOf('y')+1;
-        _.initial.indexMS = _.opt.format.indexOf('m');
-        _.initial.indexME = _.opt.format.lastIndexOf('m')+1;
-        _.initial.indexDS = _.opt.format.indexOf('d');
-        _.initial.indexDE = _.opt.format.lastIndexOf('d')+1;
+        y = _.initial.formatY.length === 2 ? String(core.substring(2, 4)) : String(core.substring(0, 4));
+        m = String(core.substring(4, 6));
+        d = String(core.substring(6, 8));
+        f = _.options.format.replace(_.initial.formatY, y).replace(_.initial.formatM, m).replace(_.initial.formatD, d);
 
-        _.initial.formatY = String(_.opt.format.substring(_.initial.indexYS, _.initial.indexYE));
-        _.initial.formatM = String(_.opt.format.substring(_.initial.indexMS, _.initial.indexME));
-        _.initial.formatD = String(_.opt.format.substring(_.initial.indexDS, _.initial.indexDE));
+        return f;
     }
 
-    Kronos.prototype.getTodayDate = function () {
-        var _ = this;
-
-        _.initial.date        = new Date();
-        _.initial.todayY    = _.initial.date.getFullYear();
-        _.initial.todayM    = _.initial.date.getMonth();
-        _.initial.todayD    = _.initial.date.getDate();
-        _.initial.dateLeng    = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        _.core.today    = String(_.initial.todayY) + _.combineZero(_.initial.todayM + 1) + _.combineZero(_.initial.todayD);
-    }
-
-    Kronos.prototype.combineZero = function(number) {
-        return String(number).length == 1 ? '0' + String(number) : String(number);
-    }
-
-    Kronos.prototype.combineCore = function(year, month, date) {
-        return String(year)+String(month)+String(date);
-    }
-
-    Kronos.prototype.isolateCore = function(core, get) {
+    Kronos.prototype.isolateCore = function (core, get) {
         switch(get) {
             case 'year+month' :
                 return core.substring(0, 6);
@@ -169,540 +205,465 @@
         }
     }
 
+    Kronos.prototype.autoPrefixer = function (transform) {
+        return {
+            '-webkit-transform': 'scale(1) translate3d(' + transform + '%, 0, 0)',
+            '-moz-transform': 'scale(1) translate3d(' + transform + '%, 0, 0)',
+            '-ms-transform': 'scale(1) translate3d(' + transform + '%, 0, 0)',
+            'transform': 'scale(1) translate3d(' + transform + '%, 0, 0)'
+        }
+    }
+
+    Kronos.prototype.slideDatepicker = function (delta, target1, target2, callback) {
+        var _ = this;
+
+        _.initial.actionFlag = true;
+        setTimeout(function () {
+            if (target2) {
+                target2.css(_.autoPrefixer(-delta * 100))
+            }
+            target1.css(_.autoPrefixer(0));
+
+            setTimeout(function () {
+                if (target2) {
+                    target2.remove();
+                }
+                callback();
+                _.initial.actionFlag = false;
+            }, delta ? 300 : 1);
+        }, 1);
+    }
+
+    Kronos.prototype.visibleMotion = function (type, show, hide) {
+        var class1 = type === 'in' ? 'kronos-outer-scale-h' : 'kronos-outer-scale-r';
+        var class2 = type === 'in' ? 'kronos-outer-scale-r' : 'kronos-outer-scale-h';
+
+        hide.addClass(class1);
+        hide.addClass('kronos-outer-hide');
+        show.addClass('kronos-outer-show');
+        setTimeout(function () {
+            show.removeClass(class2);
+            setTimeout(function () {
+                hide.removeClass('kronos-outer-hide');
+                show.removeClass('kronos-outer-show');
+            }, 500);
+        }, 200);
+    }
+    // end : util function =================================================================================================================================
+
+
+
+    // start: only one run function =========================================================================================================================
+    Kronos.prototype.checkFormat = function () {
+        var _ = this;
+
+        _.initial.indexYS = _.options.format.indexOf('y');
+        _.initial.indexYE = _.options.format.lastIndexOf('y')+1;
+        _.initial.indexMS = _.options.format.indexOf('m');
+        _.initial.indexME = _.options.format.lastIndexOf('m')+1;
+        _.initial.indexDS = _.options.format.indexOf('d');
+        _.initial.indexDE = _.options.format.lastIndexOf('d')+1;
+
+        _.initial.formatY = String(_.options.format.substring(_.initial.indexYS, _.initial.indexYE));
+        _.initial.formatM = String(_.options.format.substring(_.initial.indexMS, _.initial.indexME));
+        _.initial.formatD = String(_.options.format.substring(_.initial.indexDS, _.initial.indexDE));
+    }
+
+    Kronos.prototype.getTodayDate = function () {
+        var _ = this;
+
+        _.initial.date = new Date();
+        _.initial.todayY = _.initial.date.getFullYear();
+        _.initial.todayM = _.initial.date.getMonth();
+        _.initial.todayD = _.initial.date.getDate();
+        _.initial.dateLeng = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        _.corevar.today = String(_.initial.todayY) + _.combineZero(_.initial.todayM + 1) + _.combineZero(_.initial.todayD);
+    }
+
     Kronos.prototype.setLayout = function () {
         var _ = this;
 
-        _.$outer = _.$input.wrap(_.node.outer).parent('.'+_.opt.nameSpace+'-outer');
+        _.element.common.outer = _.element.kronos.wrap(_.markups.common.outer).parent('.kronos-outer');
+        _.element.common.inner = _.element.common.outer.append(_.markups.common.inner).children('.kronos-inner');
 
-        if (_.opt.button.trigger) {
-            _.$trigger = _.$outer.append(_.node.trigger).children('.'+_.opt.nameSpace+'-trigger');
-        }
-
-        _.$viewer = _.$outer.append(_.node.viewer).children('.'+_.opt.nameSpace+'-viewer');
-        _.$monthLayer = _.$viewer.append(_.node.monthLayer).children('.'+_.opt.nameSpace+'-month-layer');
-        _.$monthLayerHead = _.$monthLayer.append('<div class="'+_.opt.nameSpace+'-month-head">').children('.'+_.opt.nameSpace+'-month-head');
-        _.$monthLayerBody = _.$monthLayer.append('<div class="'+_.opt.nameSpace+'-month-body">').children('.'+_.opt.nameSpace+'-month-body');
-        _.$yearLayer = _.$viewer.append(_.node.yearLayer).children('.'+_.opt.nameSpace+'-year-layer');
-        _.$yearLayerHead = _.$yearLayer.append('<div class="'+_.opt.nameSpace+'-year-head">').children('.'+_.opt.nameSpace+'-year-head');
-        _.$yearLayerBody = _.$yearLayer.append('<div class="'+_.opt.nameSpace+'-year-body">').children('.'+_.opt.nameSpace+'-year-body');
-        _.$dateLayer = _.$viewer.append(_.node.dateLayer).children('.'+_.opt.nameSpace+'-date-layer');
+        _.element.year.outer = _.element.common.inner.append(_.markups.year.outer).children('.kronos-year-outer');
+        _.element.month.outer = _.element.common.inner.append(_.markups.month.outer).children('.kronos-month-outer');
+        _.element.date.outer = _.element.common.inner.append(_.markups.date.outer).children('.kronos-date-outer');
     }
 
-    Kronos.prototype.inputInit = function () {
+    Kronos.prototype.setKronosValue = function () {
         var _ = this;
 
-        if (_.opt.initDate) {
-            _.core.input = _.opt.initDate;
-            _.$input.attr({'core' : _.core.input}).val(_.convertFormat(_.core.input));
+        if (_.options.initDate) {
+            _.corevar.selectedC = _.options.initDate;
+            _.corevar.selectedF = _.convertFormat(_.corevar.selectedC);
+            _.element.kronos.attr({'core': _.corevar.selectedC}).val(_.corevar.selectedF);
         }
     }
 
-    Kronos.prototype.convertFormat = function(core) {
-        var _ = this, f, y, m, d;
-
-        y = _.initial.formatY.length === 2 ? String(core.substring(2, 4)) : String(core.substring(0, 4));
-        m = String(core.substring(4, 6));
-        d = String(core.substring(6, 8));
-        f = _.opt.format.replace(_.initial.formatY, y).replace(_.initial.formatM, m).replace(_.initial.formatD, d);
-
-        return f;
-    }
-
-    Kronos.prototype.resetMnyLayer = function () {
+    Kronos.prototype.setVisible = function () {
         var _ = this;
 
-        _.$monthLayer.removeClass('kronos-visible');
-        _.$yearLayer.removeClass('kronos-visible');
-    }
-
-    Kronos.prototype.setDatepicker = function () {
-        var _ = this;
-
-        _.setDate();
-        _.setMarkup();
-        _.getCoreDate();
-        _.setDateClass();
-        _.onClickDate();
-        _.onClickButton();
-        _.onClickTitle();
-        _.onChangeSelect();
-        _.slideAnimate();
-        _.resetMnyLayer();
-
-        if (_.initFlag) {
-            _.$input.focus();
+        if (_.options.visible) {
+            _.element.common.outer.addClass('kronos-visible');
+            _.openDatepicker();
         }
     }
+    // end: only one run function =========================================================================================================================
 
-    Kronos.prototype.setDate = function () {
+
+
+    Kronos.prototype.openDatepicker = function () {
+        // 달력 열기
+        var _ = this;
+
+        _.setDateInit(0); // 데이트피커 하위 마크업
+
+        _.element.common.outer.addClass('kronos-open');
+        _.element.year.outer.addClass('kronos-outer-scale-h');
+        _.element.month.outer.addClass('kronos-outer-scale-h');
+
+        // onEvents
+        _.eventsRegister.close(_);
+    }
+
+    Kronos.prototype.closeDatepicker = function () {
+        // 달력 닫기
+        var _ = this;
+
+        _.element.year.outer.empty();
+        _.element.month.outer.empty();
+        _.element.date.outer.empty();
+
+        _.element.common.outer.removeClass('kronos-open');
+
+        // offEvents
+        $(document).off(_.events.click);
+    }
+
+    Kronos.prototype.setThisDate = function () {
         var _ = this;
 
         _.initial.thisY = _.initial.date.getFullYear();
+        _.initial.startY = _.initial.thisY - 4 < 0 ? 0 : _.initial.thisY - 4;
+        _.initial.endY = _.initial.startY + 8;
         _.initial.thisM = _.initial.date.getMonth();
-        _.str.thisM = _.combineZero(_.initial.thisM + 1);
+        _.strings.thisM = _.combineZero(_.initial.thisM + 1);
         _.initial.prevY = _.initial.thisM === 0 ? _.initial.thisY - 1 : _.initial.thisY;
         _.initial.prevM = _.initial.thisM === 0 ? 11 : _.initial.thisM - 1;
         _.initial.nextY = _.initial.thisM === 11 ? _.initial.thisY + 1 : _.initial.thisY;
         _.initial.nextM = _.initial.thisM === 11 ? 0 : _.initial.thisM + 1;
         _.initial.dateLeng[1] = (_.initial.thisY % 4 === 0 && _.initial.thisY % 100 !== 0) || _.initial.thisY % 400 === 0 ? 29 : 28;
         _.initial.thisDateLeng = _.initial.dateLeng[_.initial.thisM];
-        _.initial.titleYM = _.initial.thisY + '. ' + _.str.thisM;
-        _.str.thisYM = _.initial.thisY + _.str.thisM;
-        _.str.prevYM = _.initial.prevY + _.combineZero(_.initial.prevM + 1);
-        _.str.nextYM = _.initial.nextY + _.combineZero(_.initial.nextM + 1);
+        _.initial.titleYM = _.initial.thisY + '. ' + _.strings.thisM;
+        _.strings.thisYM = _.initial.thisY + _.strings.thisM;
+        _.strings.prevYM = _.initial.prevY + _.combineZero(_.initial.prevM + 1);
+        _.strings.nextYM = _.initial.nextY + _.combineZero(_.initial.nextM + 1);
         _.initial.date.setDate(1);
-        _.initial.firstDay = _.initial.date.getDay();
+        _.initial.thisDay = _.initial.date.getDay();
     }
 
-    Kronos.prototype.getCoreDate = function () {
+    Kronos.prototype.setDateInit = function (delta) {
+        // 달력 그리기
         var _ = this;
 
-        if (_.$input.attr('core')) {
-            _.core.input = _.$input.attr('core');
-        }
+        _.initial.date.setMonth(_.initial.date.getMonth() + delta);
 
-        if (_.$from && _.$from.attr('core')) {
-            _.core.from = _.$from.attr('core');
-        }
+        _.setThisDate(); // 오늘 날짜 데이터 설정
 
-        if (_.$to && _.$to.attr('core')) {
-            _.core.to = _.$to.attr('core');
-        }
-    }
+        _.element.date.inner = _.element.date.outer.append(_.markups.date.inner).children('.kronos-date-inner:last-child');
+        _.element.date.head = _.element.date.inner.append(_.markups.date.head).children('.kronos-date-head');
+        _.element.date.body = _.element.date.inner.append(_.markups.date.body).children('.kronos-date-body');
+        _.element.date.prev = _.element.date.head.append(_.markups.date.prev).children('.kronos-date-prev');
+        _.element.date.title = _.element.date.head.append(_.markups.date.title).children('.kronos-date-title');
+        _.element.date.year = _.element.date.title.append('<span class="kronos-date-year">'+_.initial.thisY+_.options.text.thisYear+'</span>').children('.kronos-date-year');
+        _.element.date.month = _.element.date.title.append('<span class="kronos-date-month">'+_.options.text.month[_.initial.thisM]+_.options.text.thisMonth+'</span>').children('.kronos-date-month');
+        _.element.date.next = _.element.date.head.append(_.markups.date.next).children('.kronos-date-next');
 
-    Kronos.prototype.resetPeriod = function () {
-        var _ = this;
+        _.element.date.inner.css(_.autoPrefixer(delta * 100));
 
-        _.$input.val(null).attr('core', null);
-        _.core.input = null, _.core.from = null, _.core.to = null;
-
-        _.setDateClass();
-    }
-
-    Kronos.prototype.slideAnimate = function () {
-        var _ = this;
-
-        _.$dateLayer.animate({'left' : _.initial.outerLeft}, 500, function () {
-            _.$oldInner.remove();
-            _.$dateLayer.css({'left' : 0});
-            _.$newInner.removeClass('new').addClass('old').css({'left' : 0});
-            _.initial.oldY = _.initial.thisY;
-            _.initial.oldM = _.initial.thisM;
+        _.setDayMarkup(); // 요일 마크업 그리기
+        _.setDateMarkup(); // 각 날짜 마크업 그리기
+        _.getCoreData(); // 코어 데이타 (this, from, to) 가져오기
+        _.setDateClasses(); // 각 날짜에 클래스 매핑
+        _.slideDatepicker(delta, _.element.date.inner, _.element.date.inner2, function () {
+            _.element.date.inner2 = _.element.date.inner;
+            _.element.date.inner = null;
         });
-    }
-    
-    Kronos.prototype.setMarkup = function () {
-        var _ = this;
 
-        _.setPositionLeft();
-        _.setLayoutMarkup();
-        _.setNaviMarkup();
-        _.setDaysMarkup();
-        _.setDateMarkup();
-        _.setMonthMarkup();
-        _.setYearMarkup();
+        // onEvents
+        _.eventsRegister.date(_);
     }
 
-    Kronos.prototype.setPositionLeft = function () {
+    Kronos.prototype.setMonthInit = function (delta) {
         var _ = this;
 
-        switch(true) {
-            case !_.initial.oldY || _.initial.oldY === _.initial.thisY && _.initial.oldM === _.initial.thisM :
-                _.initial.innerLeft = '0px';
-                _.initial.outerLeft = '0px';
-                break;
-            case _.initial.oldY < _.initial.thisY :
-                _.initial.innerLeft = '100%';
-                _.initial.outerLeft = '-100%';
-                break;
-            case _.initial.oldY > _.initial.thisY :
-                _.initial.innerLeft = '-100%';
-                _.initial.outerLeft = '100%';
-                break;
-            case _.initial.oldM < _.initial.thisM :
-                _.initial.innerLeft = '100%';
-                _.initial.outerLeft = '-100%';
-                break;
-            default :
-                _.initial.innerLeft = '-100%';
-                _.initial.outerLeft = '100%';
-                break;
-        }
+        _.element.month.inner = _.element.month.outer.append(_.markups.month.inner).children('.kronos-month-inner:last-child');
+        _.element.month.head = _.element.month.inner.append(_.markups.month.head).children('.kronos-month-head');
+        _.element.month.body = _.element.month.inner.append(_.markups.month.body).children('.kronos-month-body');
+        _.element.month.prev = _.element.month.head.append(_.markups.month.prev).children('.kronos-month-prev');
+        _.element.month.next = _.element.month.head.append(_.markups.month.next).children('.kronos-month-next');
+
+        _.element.month.inner.css(_.autoPrefixer(delta * 100));
+
+        _.slideDatepicker(delta, _.element.month.inner, _.element.month.inner2, function () {
+            _.element.month.inner2 = _.element.month.inner;
+            _.element.month.inner = null;
+        });
+        _.setMonthMarkup(delta);
+
+        _.element.month.title = _.element.month.head.append(_.markups.month.title).children('.kronos-month-title').text(_.initial.thisY);
+
+        // onEvents
+        _.eventsRegister.month(_);
     }
 
-    Kronos.prototype.setLayoutMarkup = function () {
+    Kronos.prototype.setYearInit = function (delta) {
         var _ = this;
 
-        console.log('setLayoutMarkup');
+        if (!delta && _.element.year.inner2) {
+            _.element.year.inner2.remove();
+        }
+        _.element.year.inner = _.element.year.outer.append(_.markups.year.inner).children('.kronos-year-inner:last-child');
+        _.element.year.head = _.element.year.inner.append(_.markups.year.head).children('.kronos-year-head');
+        _.element.year.body = _.element.year.inner.append(_.markups.year.body).children('.kronos-year-body');
+        _.element.year.prev = _.element.year.head.append(_.markups.year.prev).children('.kronos-year-prev');
+        _.element.year.next = _.element.year.head.append(_.markups.year.next).children('.kronos-year-next');
 
-        _.$oldInner = _.$dateLayer.children('.'+_.opt.nameSpace+'-inner');
-        _.$newInner = _.$dateLayer.append('<div class="'+_.opt.nameSpace+'-inner" style="left: '+_.initial.innerLeft+'" />').children('.'+_.opt.nameSpace+'-inner:last-child')
-        _.$head = _.$newInner.append('<div class="'+_.opt.nameSpace+'-head" />').children('.'+_.opt.nameSpace+'-head');
-        _.$body = _.$newInner.append('<div class="'+_.opt.nameSpace+'-body" />').children('.'+_.opt.nameSpace+'-body');
-        _.$title = _.$head.append('<div class="'+_.opt.nameSpace+'-title" />').children('.'+_.opt.nameSpace+'-title');
+        _.element.year.inner.css(_.autoPrefixer(delta * 100));
+
+        _.initial.startY = _.initial.thisY - 4 < 0 ? 0 : _.initial.thisY - 4;
+        _.initial.endY = _.initial.startY + 8;
+
+        _.slideDatepicker(delta, _.element.year.inner, _.element.year.inner2, function () {
+            _.element.year.inner2 = _.element.year.inner;
+            _.element.year.inner = null;
+        });
+        _.setYearMarkup(delta);
+
+        _.element.year.title = _.element.year.head.append(_.markups.year.title).children('.kronos-year-title').text(_.initial.startY+_.options.text.thisYear+' ~ '+_.initial.endY+_.options.text.thisYear);
+
+        // onEvents
+        _.eventsRegister.year(_);
     }
 
-    Kronos.prototype.setNaviMarkup = function () {
+    Kronos.prototype.setDayMarkup = function () {
         var _ = this;
 
-        if (_.opt.select) {
-            _.setSelectMarkup();
-        } else {
-            _.$titleYear = _.$title.append('<button class="'+_.opt.nameSpace+'-title-year">'+_.initial.thisY+_.opt.text.thisYear+'</button>').children('.'+_.opt.nameSpace+'-title-year');
-            _.$titleMonth = _.$title.append('<button class="'+_.opt.nameSpace+'-title-month">'+_.opt.text.month[_.initial.thisM]+_.opt.text.thisMonth+'</button>').children('.'+_.opt.nameSpace+'-title-month');
+        _.markups.date.content = '<table><thead><tr>';
+        for (var i = 0; i < 7; i++) {
+            _.markups.date.content += '<th>'+_.options.text.days[i]+'</th>';
         }
-
-        if (_.opt.button.month) {
-            _.$btnPrevMonth = _.$head.append(_.node.btnPrevMonth).children('.'+_.opt.nameSpace+'-prev-month');
-            _.$btnNextMonth = _.$head.append(_.node.btnNextMonth).children('.'+_.opt.nameSpace+'-next-month');
-        }
-
-        if (_.opt.button.year) {
-            _.$btnPrevYear = _.$head.append(_.node.btnPrevYear).children('.'+_.opt.nameSpace+'-prev-year');
-            _.$btnNextYear = _.$head.append(_.node.btnNextYear).children('.'+_.opt.nameSpace+'-next-year');
-        }
-
-        if (_.opt.button.today) {
-            _.$btnToday = _.$head.append(_.node.btnToday).children('.'+_.opt.nameSpace+'-today');
-        }
-    }
-
-    Kronos.prototype.setSelectMarkup = function () {
-        var _ = this;
-        
-        _.node.selectYear = '<select class="'+_.opt.nameSpace+'-select-year">';
-        _.initial.selectYearStart = _.initial.todayY+_.opt.selectYear.start;
-        _.initial.selectYearEnd = _.initial.todayY+_.opt.selectYear.end;
-        for(var i = _.initial.selectYearEnd; i >= _.initial.selectYearStart; i--) {
-            _.node.selectYear += i === _.initial.thisY ? '<option value="'+i+'" selected>'+i+'</option>' : '<option value="'+i+'">'+i+'</option>';
-        }
-        _.node.selectYear += '</select>'+_.opt.text.thisYear;
-        _.$selectYear = _.$title.append(_.node.selectYear).children('.'+_.opt.nameSpace+'-select-year');
-        _.$selectYearOption = _.$selectYear.children('option');
-
-        _.node.selectMonth = '<select class="'+_.opt.nameSpace+'-select-month">';
-        for(var i = 1; i < 13; i++) {
-            _.node.selectMonth += i === (_.initial.thisM+1) ? '<option value="'+i+'" selected>'+i+'</option>' : '<option value="'+i+'">'+i+'</option>';
-        }
-        _.node.selectMonth += '</select>'+_.opt.text.thisMonth;
-        _.$selectMonth = _.$title.append(_.node.selectMonth).children('.'+_.opt.nameSpace+'-select-month');
-        _.$selectMonthOption = _.$selectMonth.children('option');
-    }
-
-    Kronos.prototype.setDaysMarkup = function () {
-        var _ = this;
-
-        _.node.markup = '<table><thead><tr>';
-        for(var i = 0; i < 7; i++) {
-            _.node.markup += '<th>'+_.opt.text.days[i]+'</th>';
-        }
-        _.node.markup += '</tr></thead>';
+        _.markups.date.content += '</tr></thead>';
     }
 
     Kronos.prototype.setDateMarkup = function () {
-        var _ = this, pmFirstDay = _.initial.dateLeng[_.initial.prevM] - _.initial.firstDay;
+        var _ = this;
+        _.initial.prevMonthFirstDate = _.initial.dateLeng[_.initial.prevM] - _.initial.thisDay;
 
-        _.node.markup += '<tbody><tr>';
+        _.markups.date.content += '<tbody><tr>';
 
-        for (var i = 1; i <= _.initial.firstDay; i++) {
-            _.node.markup += '<td><button type="button" core="'+_.str.prevYM+(pmFirstDay+i)+'" title="'+_.convertFormat(_.str.prevYM+(pmFirstDay+i))+'">'+(pmFirstDay+i)+'</button></td>';
+        for (var i = 1; i <= _.initial.thisDay; i++) {
+            // 이전달 마크업
+            _.markups.date.content += '<td><button type="button" core="'+_.strings.prevYM+(_.initial.prevMonthFirstDate+i)+'" title="'+_.convertFormat(_.strings.prevYM+(_.initial.prevMonthFirstDate+i))+'">'+(_.initial.prevMonthFirstDate+i)+'</button></td>';
             _.initial.weekCount++;
         }
 
-        for(var i = 1; i <= _.initial.thisDateLeng; i++) {
+        for (var i = 1; i <= _.initial.thisDateLeng; i++) {
+            // 이번달 마크업
             if (_.initial.weekCount === 0) {
-                _.node.markup += '<tr>';
+                _.markups.date.content += '<tr>';
             }
-            _.node.markup += '<td><button type="button" core="'+_.str.thisYM+_.combineZero(i)+'" title="'+_.convertFormat(_.str.thisYM+_.combineZero(i))+'">'+i+'</button></td>';
+            _.markups.date.content += '<td><button type="button" core="'+_.strings.thisYM+_.combineZero(i)+'" title="'+_.convertFormat(_.strings.thisYM+_.combineZero(i))+'">'+i+'</button></td>';
             _.initial.weekCount++;
             if (_.initial.weekCount === 7) {
-                _.node.markup += '</tr>';
+                _.markups.date.content += '</tr>';
                 _.initial.weekCount = 0;
             }
         }
 
         for (var i = 1; _.initial.weekCount != 0; i++) {
+            // 다음달 마크업
             if (_.initial.weekCount === 7) {
-                _.node.markup += '</tr>';
+                _.markups.date.content += '</tr>';
                 _.initial.weekCount = 0;
             } else {
-                _.node.markup += '<td><button type="button" core="'+_.str.nextYM+_.combineZero(i)+'" title="'+_.convertFormat(_.str.nextYM+_.combineZero(i))+'">'+i+'</button></td>';
+                _.markups.date.content += '<td><button type="button" core="'+_.strings.nextYM+_.combineZero(i)+'" title="'+_.convertFormat(_.strings.nextYM+_.combineZero(i))+'">'+i+'</button></td>';
                 _.initial.weekCount++;
             }
         }
 
-        _.node.markup += '</tbody></table>';
-        _.$body.html(_.node.markup);
-        _.$viewer.css({'height' : _.$newInner.outerHeight()});
+        _.markups.date.content += '</tbody></table>';
+        _.element.date.body.html(_.markups.date.content);
+        _.element.common.inner.css({'height': _.element.date.inner.outerHeight()});
+
+        _.element.date.date = _.element.date.body.find('td');
     }
 
-    Kronos.prototype.setMonthMarkup = function () {
+    Kronos.prototype.getCoreData = function () {
         var _ = this;
 
-        _.$monthLayer.empty();
-        for (var i = 1; i <= 12; i++) {
-            _.$monthLayer.append('<button class="'+(_.initial.thisM == i-1 ? 'kronos-active' : '')+'">'+i+'</button>');
+        if (_.element.kronos.attr('core')) {
+            _.corevar.selectedC = _.element.kronos.attr('core');
+            _.corevar.selectedF = _.convertFormat(_.corevar.selectedC);
         }
-        _.$btnMonth = _.$monthLayer.children('button');
 
-        _.$btnMonth.on('click', function (e) {
-            e.stopPropagation();
-            _.initial.date.setMonth($(this).index());
-            _.setDatepicker();
-        });
-    }
-
-    Kronos.prototype.setYearMarkup = function () {
-        var _ = this;
-
-        _.$yearLayerBody.empty();
-        for (var i = _.initial.thisY - 4; i <= _.initial.thisY + 4; i++) {
-            _.$yearLayerBody.append('<button class="'+(_.initial.thisY == i ? 'kronos-active' : '')+'">'+i+'</button>');
+        if (_.element.kronosF && _.element.kronosF.attr('core')) {
+            _.corevar.fromC = _.element.kronosF.attr('core');
+            _.corevar.fromF = _.convertFormat(_.corevar.fromC);
         }
-        _.$btnYear = _.$yearLayerBody.children('button');
 
-        _.$btnYear.on('click', function (e) {
-            e.stopPropagation();
-            _.initial.date.setFullYear($(this).text());
-            _.setDatepicker();
-        });
+        if (_.element.kronosT && _.element.kronosT.attr('core')) {
+            _.corevar.toC = _.element.kronosT.attr('core');
+            _.corevar.toF = _.convertFormat(_.corevar.toC);
+        }
     }
 
-    Kronos.prototype.setDateClass = function () {
+    Kronos.prototype.setDateClasses = function () {
         var _ = this;
 
-        _.$date = _.$body.find('td').removeClass();
-        _.$date.each(function () {
+        _.element.date.date.removeClass();
+        _.element.date.date.each(function () {
             this.index = $(this).index();
             this.core = $(this).find('button').attr('core');
             this.mmdd = String(this.core).substring(4, 8);
 
-            this.Class = this.index === 0 ? 'sunday' : this.index === 6 ? 'satday' : ''; // 주말 체크
-            this.Class += this.core === _.core.input
-                || this.core === _.core.from
-                || this.core === _.core.to
-                ? ' selected' : '';
-            this.Class += _.core.input && _.core.from && this.core > _.core.from && this.core < _.core.input
-                || _.core.input && _.core.to && this.core < _.core.to && this.core > _.core.input
-                ? ' period' : '';
-            this.Class += this.core === _.core.today ? ' today' : '';
-            this.Class += _.isolateCore(this.core, 'year+month') === _.str.prevYM
-                || _.opt.disableWeekends && (this.index === 0 || this.index === 6)
-                || _.isolateCore(this.core, 'year+month') === _.str.nextYM
-                || _.core.from && this.core < _.core.from
-                || _.core.to && this.core > _.core.to
-                || _.opt.date.disabled.indexOf(this.core) !== -1
-                || _.opt.date.disabled.indexOf(this.mmdd) !== -1
+            this.Class = this.index === 0 
+                ? 'sunday' : this.index === 6 
+                ? 'satday' : ''; // weekend
+            this.Class += this.core === _.corevar.selectedC
+                || this.core === _.corevar.fromC
+                || this.core === _.corevar.toC
+                ? ' selected' : ''; // selected
+            this.Class += _.corevar.selectedC && _.corevar.fromC && this.core > _.corevar.fromC && this.core < _.corevar.selectedC
+                || _.corevar.selectedC && _.corevar.toC && this.core < _.corevar.toC && this.core > _.corevar.selectedC
+                ? ' period' : ''; // period
+            this.Class += this.core === _.corevar.today ? ' today' : '';
+            this.Class += _.isolateCore(this.core, 'year+month') === _.strings.prevYM
+                || _.options.disableWeekends && (this.index === 0 || this.index === 6)
+                || _.isolateCore(this.core, 'year+month') === _.strings.nextYM
+                || _.corevar.fromC && this.core < _.corevar.fromC
+                || _.corevar.toC && this.core > _.corevar.toC
+                || _.options.date.disabled.indexOf(this.core) !== -1
+                || _.options.date.disabled.indexOf(this.mmdd) !== -1
                 ? ' disabled' : '';
-            this.Class += _.opt.date.holiday.indexOf(this.core) !== -1
-                || _.opt.date.holiday.indexOf(this.mmdd) !== -1
+            this.Class += _.options.date.holiday.indexOf(this.core) !== -1
+                || _.options.date.holiday.indexOf(this.mmdd) !== -1
                 ? ' holiday' : '';
             $(this).addClass(this.Class);
         });
     }
 
-    Kronos.prototype.setVisible = function () {
+    Kronos.prototype.setMonthMarkup = function (delta) {
         var _ = this;
 
-        _.$outer.addClass('visible');
-        _.setDatepicker();
-
-        $(window).on('load', function () {
-            if (_.$from) {
-                _.$from.kronos('getCoreDate');
-                _.$from.kronos('setDateClass');
-            }
-            if (_.$to) {
-                _.$to.kronos('getCoreDate');
-                _.$to.kronos('setDateClass');
-            }
-        });
-    }
-
-    Kronos.prototype.onOpenEvent = function () {
-        var _ = this;
-
-        if (!_.$outer.hasClass('open')) {
-            _.$outer.addClass('open');
-            _.setDatepicker();
-            _.onCloseEvent();
+        _.initial.thisY = parseInt(_.initial.thisY) + parseInt(delta);
+        for (var i = 0; i < 12; i++) {
+            _.element.month.body.append('<button core="'+_.initial.thisY+_.combineZero(i+1)+'" class="'+(_.initial.thisY === _.initial.date.getFullYear() && i === _.initial.thisM ? 'selected' : '')+'">'+(i+1)+'</button>');
         }
+        _.element.month.month = _.element.month.body.find('button');
     }
 
-    Kronos.prototype.onCloseEvent = function () {
+    Kronos.prototype.setYearMarkup = function (delta) {
         var _ = this;
 
-        _.$outer.on(_.keyupEvent, function(e) {
-            if (e.keyCode === 27) {
-                console.log('2');
-                _.closeDatepicker();
-            }
-        });
-
-        $(document).on(_.clickEvent, function(e) {
-            if (!$(e.target).closest(_.$outer[0]).length) {
-                _.closeDatepicker();
-            }
-        });
+        _.initial.startY = _.initial.startY + (9 * delta) < 0 ? 0 : _.initial.startY + (9 * delta);
+        _.initial.thisY = _.initial.thisY + (9 * delta);
+        _.initial.endY = _.initial.startY + 8;
+        for (var i = _.initial.startY; i <= _.initial.endY; i++) {
+            _.element.year.body.append('<button core="'+i+'" class="'+(i === _.initial.date.getFullYear() ? 'selected' : '')+'">'+i+'</button>');
+        }
+        _.element.year.year = _.element.year.body.find('button');
     }
 
-    Kronos.prototype.closeDatepicker = function () {
-        var _ = this;
-
-        console.log('close');
-
-        _.$dateLayer.empty();
-        _.$monthLayerBody.empty();
-        _.$yearLayerBody.empty();
-        _.$outer.removeClass('open');
-        _.$outer.off(_.keyupEvent);
-        $(document).off(_.clickEvent);
-    }
-
-    Kronos.prototype.onClickInput = function () {
-        var _ = this;
-
-        if (!_.opt.visible) {
-            _.$input.on({
-                'click': function () {
-                    _.onOpenEvent();
-                },
-                'keypress': function(e) {
-                    if (e.keyCode === 13) {
-                        _.onOpenEvent();
+    Kronos.prototype.eventsRegister = (function () {
+        return {
+            open: function (_) {
+                if (!_.options.visible) {
+                    _.element.kronos.on(_.events.click, function (e) {
+                        _.openDatepicker();
+                    });
+                }
+            },
+            close: function (_) {
+                $(document).on(_.events.click, function (e) {
+                    if (!$(e.target).closest(_.element.common.outer).length && !_.options.visible) {
+                        _.closeDatepicker();
                     }
-                }
-            });
-        }
+                });
+            },
+            date: function (_) {
+                _.element.date.title.on(_.events.click, function () {
+                    _.setMonthInit(0);
+                    _.visibleMotion('out', _.element.month.outer, _.element.date.outer);
+                });
+                _.element.date.date.on(_.events.click, function () {
+                    if (!$(this).hasClass('disabled')) {
+                        _.element.kronos.val(_.convertFormat(this.core)).attr({'core': this.core});
+                        _.options.onChange(this.core);
 
-        if (_.opt.button.trigger) {
-            _.$trigger.on({
-                'click': function () {
-                    _.onOpenEvent();
-                }
-            });
-        }
-    }
+                        if (_.options.visible) {
+                            _.getCoreData();
+                            _.setDateClasses();
 
-    Kronos.prototype.onClickDate = function () {
-        var _ = this;
+                            if (_.element.kronosF) {
+                                _.element.kronosF.kronos('getCoreData');
+                                _.element.kronosF.kronos('setDateClasses');
+                            }
 
-        _.$date.on('click', function () {
-            if (!$(this).hasClass('disabled')) {
-                _.$input.val(_.convertFormat(this.core)).attr({'core' : this.core});
-                _.opt.onChange(this.core);
-                if (_.opt.visible) {
-                    _.getCoreDate();
-                    _.setDateClass();
-                    if (_.$from) {
-                        _.$from.kronos('getCoreDate');
-                        _.$from.kronos('setDateClass');
+                            if (_.element.kronosT) {
+                                _.element.kronosT.kronos('getCoreData');
+                                _.element.kronosT.kronos('setDateClasses');
+                            }
+                        } else {
+                            _.closeDatepicker();
+                        }
                     }
-                    if (_.$to) {
-                        _.$to.kronos('getCoreDate');
-                        _.$to.kronos('setDateClass');
-                    }
-                } else {
-                    console.log('3');
-                    _.closeDatepicker();
-                }
-            }
-        });
-    }
-
-    Kronos.prototype.onClickTitle = function () {
-        var _ = this;
-
-        if (_.$titleMonth) {
-            _.$titleMonth.on('click', function () {
-                _.$monthLayer.addClass('kronos-visible');
-                _.$yearLayer.removeClass('kronos-visible');
-            });
-        }
-
-        if (_.$titleYear) {
-            _.$titleYear.on('click', function () {
-                _.$yearLayer.addClass('kronos-visible');
-                _.$monthLayer.removeClass('kronos-visible');
-            });
-        }
-    }
-
-    Kronos.prototype.onClickButton = function () {
-        var _ = this;
-
-        if (_.opt.button.month) {
-            _.$btnPrevMonth.on('click', function () {
-                _.initial.date.setMonth(_.initial.date.getMonth()-1);
-                if (_.opt.select && _.initial.date.getFullYear() < _.initial.selectYearStart) {
-                    _.initial.date.setMonth(_.initial.date.getMonth()+1)
-                    return false;
-                } else {
-                    _.setDatepicker();
-                }
-            });
-
-            _.$btnNextMonth.on('click', function () {
-                _.initial.date.setMonth(_.initial.date.getMonth()+1);
-                if (_.opt.select && _.initial.date.getFullYear() > _.initial.selectYearEnd) {
-                    _.initial.date.setMonth(_.initial.date.getMonth()-1)
-                    return false;
-                } else {
-                    _.setDatepicker();
-                }
-            });
-        }
-
-        if (_.opt.button.year) {
-            _.$btnPrevYear.on('click', function () {
-                _.initial.date.setFullYear(_.initial.thisY-1);
-                if (_.opt.select && _.initial.thisY <= _.initial.selectYearStart) {
+                });
+                _.element.date.next.on(_.events.click, function () {
+                    _.setDateInit(1);
+                });
+                _.element.date.prev.on(_.events.click, function () {
+                    _.setDateInit(-1);
+                });
+            },
+            month: function (_) {
+                _.element.month.title.on(_.events.click, function () {
+                    _.setYearInit(0);
+                    _.visibleMotion('out', _.element.year.outer, _.element.month.outer);
+                });
+                _.element.month.month.on(_.events.click, function () {
                     _.initial.date.setFullYear(_.initial.thisY);
-                    return false;
-                } else {
-                    _.setDatepicker();
-                }
-            });
+                    _.initial.date.setMonth(parseInt($(this).text()) - 1);
+                    _.setDateInit(0);
 
-            _.$btnNextYear.on('click', function () {
-                _.initial.date.setFullYear(_.initial.thisY+1);
-                if (_.opt.select && _.initial.thisY >= _.initial.selectYearEnd) {
-                    _.initial.date.setFullYear(_.initial.thisY);
-                    return false;
-                } else {
-                    _.setDatepicker();
-                }
-            });
+                    _.visibleMotion('in', _.element.date.outer, _.element.month.outer);
+                });
+                _.element.month.next.on(_.events.click, function () {
+                    _.setMonthInit(1);
+                });
+                _.element.month.prev.on(_.events.click, function () {
+                    _.setMonthInit(-1);
+                });
+            },
+            year: function (_) {
+                _.element.year.year.on(_.events.click, function () {
+                    _.initial.date.setFullYear($(this).attr('core'));
+                    _.initial.thisY = $(this).attr('core');
+                    _.setMonthInit(0);
+
+                    _.visibleMotion('in', _.element.month.outer, _.element.year.outer);
+                });
+                _.element.year.next.on(_.events.click, function () {
+                    _.setYearInit(1);
+                });
+                _.element.year.prev.on(_.events.click, function () {
+                    _.setYearInit(-1);
+                });
+            }
         }
-
-        if (_.opt.button.today) {
-            _.$btnToday.on('click', function () {
-                if (_.initial.todayY === _.initial.thisY && _.initial.todayM === _.initial.thisM) {
-                    return false;
-                } else {
-                    _.initial.date.setFullYear(_.initial.todayY);
-                    _.initial.date.setMonth(_.initial.todayM);
-                    _.setDatepicker();
-                }
-            });
-        }
-    }
-
-    Kronos.prototype.onChangeSelect = function () {
-        var _ = this;
-
-        if (_.opt.select) {
-            _.$selectYear.on('change', function () {
-                _.initial.date.setFullYear($(this).val());
-                _.setDatepicker();
-            });
-
-            _.$selectMonth.on('change', function () {
-                _.initial.date.setMonth($(this).val()-1);
-                _.setDatepicker();
-            });
-        }
-    }
+    })();
 
     Kronos.prototype.init = function () {
         var _ = this;
@@ -710,14 +671,24 @@
         _.checkFormat();
         _.getTodayDate();
         _.setLayout();
-        _.inputInit();
-        _.onClickInput();
+        _.setKronosValue();
+        _.setVisible();
 
-        if (_.opt.visible) {
-            _.setVisible();
-        }
+        _.eventsRegister.open(_);
+    }
 
-        _.initFlag = true;
+    Kronos.prototype.resetPeriod = function () {
+        var _ = this;
+
+        _.element.kronos.val(null).attr('core', null);
+        _.corevar.selectedC = null;
+        _.corevar.selectedF = null;
+        _.corevar.fromC = null;
+        _.corevar.fromF = null;
+        _.corevar.toC = null;
+        _.corevar.toF = null;
+
+        _.setDateClass();
     }
 
     $.fn.kronos = function () {
