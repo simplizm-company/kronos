@@ -46,7 +46,7 @@
                     //console.log(date);
                 }
             }
-            _.options = _.hasOwnProperty(defaults, settings);
+            _.options = $.extend(true, {}, defaults, settings);
             _.initial = {
                 fnidx: ++fnidx,
                 weekCount: 0,
@@ -119,21 +119,6 @@
 
     Kronos.prototype.combineCore = function(year, month, date) {
         return String(year)+String(month)+String(date);
-    }
-
-    Kronos.prototype.hasOwnProperty = function(org, src) {
-        var _ = this;
-        for(var prop in src) {
-            if (!Object.prototype.hasOwnProperty.call(src, prop)) {
-                continue;
-            }
-            if ('object' === $.type(org[prop])) {
-                org[prop] = ($.isArray(org[prop]) ? src[prop].slice(0) : _.hasOwnProperty(org[prop], src[prop]));
-            } else {
-                org[prop] = src[prop];
-            }
-        }
-        return org;
     }
 
     Kronos.prototype.convertFormat = function(core) {
