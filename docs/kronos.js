@@ -150,8 +150,12 @@
         }
     }
 
-    Kronos.prototype.autoPrefixer = function (transform) {
+    Kronos.prototype.autoPrefixer = function (transition, transform) {
         return {
+            '-webkit-transition': transition,
+            '-moz-transition': transition,
+            '-ms-transition': transition,
+            'transition': transition,
             '-webkit-transform': 'scale(1) translate3d(' + transform + '%, 0, 0)',
             '-moz-transform': 'scale(1) translate3d(' + transform + '%, 0, 0)',
             '-ms-transform': 'scale(1) translate3d(' + transform + '%, 0, 0)',
@@ -164,9 +168,9 @@
         _.initial.actionFlag = true;
         setTimeout(function () {
             if (target2) {
-                target2.css(_.autoPrefixer(-delta * 100))
+                target2.css(_.autoPrefixer('none', -delta * 100))
             }
-            target1.css(_.autoPrefixer(0));
+            target1.css(_.autoPrefixer('none', 0));
             setTimeout(function () {
                 if (target2) {
                     target2.remove();
@@ -305,7 +309,7 @@
         _.element.date.year = _.element.date.title.append('<span class="kronos-date-year">'+_.initial.thisY+_.options.text.thisYear+'</span>').children('.kronos-date-year');
         _.element.date.month = _.element.date.title.append('<span class="kronos-date-month">'+_.options.text.month[_.initial.thisM]+_.options.text.thisMonth+'</span>').children('.kronos-date-month');
         _.element.date.next = _.element.date.head.append(_.markups.date.next).children('.kronos-date-next');
-        _.element.date.inner.css(_.autoPrefixer(delta * 100));
+        _.element.date.inner.css(_.autoPrefixer('none', delta * 100));
         _.setDayMarkup(); // 요일 마크업 그리기
         _.setDateMarkup(); // 각 날짜 마크업 그리기
         _.getCoreData(); // 코어 데이타 (this, from, to) 가져오기
@@ -325,7 +329,7 @@
         _.element.month.body = _.element.month.inner.append(_.markups.month.body).children('.kronos-month-body');
         _.element.month.prev = _.element.month.head.append(_.markups.month.prev).children('.kronos-month-prev');
         _.element.month.next = _.element.month.head.append(_.markups.month.next).children('.kronos-month-next');
-        _.element.month.inner.css(_.autoPrefixer(delta * 100));
+        _.element.month.inner.css(_.autoPrefixer('none', delta * 100));
         _.slideDatepicker(delta, _.element.month.inner, _.element.month.inner2, function () {
             _.element.month.inner2 = _.element.month.inner;
             _.element.month.inner = null;
@@ -346,7 +350,7 @@
         _.element.year.body = _.element.year.inner.append(_.markups.year.body).children('.kronos-year-body');
         _.element.year.prev = _.element.year.head.append(_.markups.year.prev).children('.kronos-year-prev');
         _.element.year.next = _.element.year.head.append(_.markups.year.next).children('.kronos-year-next');
-        _.element.year.inner.css(_.autoPrefixer(delta * 100));
+        _.element.year.inner.css(_.autoPrefixer('none', delta * 100));
         _.initial.startY = _.initial.thisY - 4 < 0 ? 0 : _.initial.thisY - 4;
         _.initial.endY = _.initial.startY + 8;
         _.slideDatepicker(delta, _.element.year.inner, _.element.year.inner2, function () {
