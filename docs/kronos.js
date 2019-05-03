@@ -168,9 +168,9 @@
         _.initial.actionFlag = true;
         setTimeout(function () {
             if (target2) {
-                target2.css(_.autoPrefixer('none', -delta * 100))
+                target2.css(_.autoPrefixer('all 300ms', -delta * 100))
             }
-            target1.css(_.autoPrefixer('none', 0));
+            target1.css(_.autoPrefixer('all 300ms', 0));
             setTimeout(function () {
                 if (target2) {
                     target2.remove();
@@ -178,7 +178,7 @@
                 callback();
                 _.initial.actionFlag = false;
             }, delta ? 300 : 1);
-        }, 1);
+        }, 50);
     }
 
     Kronos.prototype.visibleMotion = function (type, show, hide) {
