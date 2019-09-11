@@ -3,6 +3,7 @@
 .kronos-outer {display: inline-block; position: relative;}
 .kronos-outer  * {box-sizing: border-box;}
 
+.kronos-outer .kronos-cover {display: inline-block; position: relative;}
 .kronos-outer .kronos-input {box-sizing: border-box; height: 30px; padding: 5px 10px; border: 1px solid #cccccc;}
 .kronos-outer .kronos-input:focus, .kronos-outer .kronos-input:hover {border-color: #666666;}
 
