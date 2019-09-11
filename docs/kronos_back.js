@@ -5,12 +5,12 @@
  * Website: http://www.simplizm.com/
  */
 
-;(function($) {
+;(function ($) {
     'use strict';
 
     var Kronos = window.Kronos || {};
 
-    Kronos = (function() {
+    Kronos = (function () {
         var fnidx = 0;
         function kronos(element, settings){
             var _ = this;
@@ -42,12 +42,9 @@
                     disabled: [],
                     holiday: []
                 },
-                onChange: function() {
-                    // console.log(date);
-                },
-				onAfterCalendarDraw: function() {
-					// console.log(a);
-				}
+                onChange: function () {
+                    //console.log(date);
+                }
             }
             _.options = $.extend(true, {}, defaults, settings);
             _.initial = {
@@ -63,7 +60,6 @@
             _.markups = {
                 common: {
                     outer: '<div class="kronos-outer">',
-                    cover: '<div class="kronos-cover">',
                     inner: '<div class="kronos-inner">'
                 },
                 year: {
@@ -72,7 +68,7 @@
 
                     head: '<div class="kronos-year-head">',
                     body: '<div class="kronos-year-body">',
-                    title: '<button class="kronos-year-title"></button>',
+                    title: '<button type="button" class="kronos-year-title"></button>',
 
                     prev: '<button type="button" class="kronos-year-prev" title="'+_.options.text.btnYearPrev+'">'+_.options.text.btnYearPrev+'</button>',
                     next: '<button type="button" class="kronos-year-next" title="'+_.options.text.btnYearNext+'">'+_.options.text.btnYearNext+'</button>'
@@ -83,7 +79,7 @@
 
                     head: '<div class="kronos-month-head">',
                     body: '<div class="kronos-month-body">',
-                    title: '<button class="kronos-month-title"></button>',
+                    title: '<button type="button" class="kronos-month-title"></button>',
 
                     prev: '<button type="button" class="kronos-month-prev" title="'+_.options.text.btnMonthPrev+'">'+_.options.text.btnMonthPrev+'</button>',
                     next: '<button type="button" class="kronos-month-next" title="'+_.options.text.btnMonthNext+'">'+_.options.text.btnMonthNext+'</button>'
@@ -94,7 +90,7 @@
 
                     head: '<div class="kronos-date-head">',
                     body: '<div class="kronos-date-body">',
-                    title: '<button class="kronos-date-title"></button>',
+                    title: '<button type="button" class="kronos-date-title"></button>',
 
                     prev: '<button type="button" class="kronos-date-prev" title="'+_.options.text.btnDatePrev+'">'+_.options.text.btnDatePrev+'</button>',
                     next: '<button type="button" class="kronos-date-next" title="'+_.options.text.btnDateNext+'">'+_.options.text.btnDateNext+'</button>',
@@ -134,7 +130,7 @@
         return f;
     }
 
-    Kronos.prototype.isolateCore = function(core, get) {
+    Kronos.prototype.isolateCore = function (core, get) {
         switch(get) {
             case 'year+month' :
                 return core.substring(0, 6);
@@ -154,7 +150,7 @@
         }
     }
 
-    Kronos.prototype.autoPrefixer = function(transition, transform) {
+    Kronos.prototype.autoPrefixer = function (transition, transform) {
         return {
             '-webkit-transition': transition,
             '-moz-transition': transition,
@@ -167,15 +163,15 @@
         }
     }
 
-    Kronos.prototype.slideDatepicker = function(delta, target1, target2, callback) {
+    Kronos.prototype.slideDatepicker = function (delta, target1, target2, callback) {
         var _ = this;
         _.initial.actionFlag = true;
-        setTimeout(function() {
+        setTimeout(function () {
             if (target2) {
                 target2.css(_.autoPrefixer('all 300ms', -delta * 100))
             }
             target1.css(_.autoPrefixer('all 300ms', 0));
-            setTimeout(function() {
+            setTimeout(function () {
                 if (target2) {
                     target2.remove();
                 }
@@ -185,15 +181,15 @@
         }, 50);
     }
 
-    Kronos.prototype.visibleMotion = function(type, show, hide) {
+    Kronos.prototype.visibleMotion = function (type, show, hide) {
         var class1 = type === 'in' ? 'kronos-outer-scale-h' : 'kronos-outer-scale-r';
         var class2 = type === 'in' ? 'kronos-outer-scale-r' : 'kronos-outer-scale-h';
         hide.addClass(class1);
         hide.addClass('kronos-outer-hide');
         show.addClass('kronos-outer-show');
-        setTimeout(function() {
+        setTimeout(function () {
             show.removeClass(class2);
-            setTimeout(function() {
+            setTimeout(function () {
                 hide.removeClass('kronos-outer-hide');
                 show.removeClass('kronos-outer-show');
             }, 500);
@@ -204,7 +200,7 @@
 
 
     // start: only one run function =========================================================================================================================
-    Kronos.prototype.checkFormat = function() {
+    Kronos.prototype.checkFormat = function () {
         var _ = this;
         _.initial.indexYS = _.options.format.indexOf('y');
         _.initial.indexYE = _.options.format.lastIndexOf('y')+1;
@@ -217,7 +213,7 @@
         _.initial.formatD = String(_.options.format.substring(_.initial.indexDS, _.initial.indexDE));
     }
 
-    Kronos.prototype.getTodayDate = function() {
+    Kronos.prototype.getTodayDate = function () {
         var _ = this;
         _.initial.date = new Date();
         _.initial.todayY = _.initial.date.getFullYear();
@@ -227,31 +223,25 @@
         _.corevar.today = String(_.initial.todayY) + _.combineZero(_.initial.todayM + 1) + _.combineZero(_.initial.todayD);
     }
 
-    Kronos.prototype.setLayout = function() {
+    Kronos.prototype.setLayout = function () {
         var _ = this;
         _.element.common.outer = _.element.kronos.wrap(_.markups.common.outer).parent('.kronos-outer');
-        _.element.common.cover = _.element.kronos.wrap(_.markups.common.cover).parent('.kronos-cover');
         _.element.common.inner = _.element.common.outer.append(_.markups.common.inner).children('.kronos-inner');
         _.element.year.outer = _.element.common.inner.append(_.markups.year.outer).children('.kronos-year-outer');
         _.element.month.outer = _.element.common.inner.append(_.markups.month.outer).children('.kronos-month-outer');
         _.element.date.outer = _.element.common.inner.append(_.markups.date.outer).children('.kronos-date-outer');
     }
 
-    Kronos.prototype.setKronosValue = function(initDate) {
+    Kronos.prototype.setKronosValue = function () {
         var _ = this;
-        if (initDate) {
-            _.corevar.selectedC = initDate;
+        if (_.options.initDate) {
+            _.corevar.selectedC = _.options.initDate;
             _.corevar.selectedF = _.convertFormat(_.corevar.selectedC);
             _.element.kronos.attr({'core': _.corevar.selectedC}).val(_.corevar.selectedF);
-			_.initial.date.setFullYear(parseInt(initDate.substring(0, 4)));
-			_.initial.date.setMonth(parseInt(initDate.substring(4, 6)) - 1);
-			if (!_.options.visible) {
-				_.setDateInit(0);
-			}
         }
     }
 
-    Kronos.prototype.setVisible = function() {
+    Kronos.prototype.setVisible = function () {
         var _ = this;
         if (_.options.visible) {
             _.element.common.outer.addClass('kronos-visible');
@@ -262,7 +252,7 @@
 
 
 
-    Kronos.prototype.openDatepicker = function() {
+    Kronos.prototype.openDatepicker = function () {
         // 달력 열기
         var _ = this;
         _.setDateInit(0); // 데이트피커 하위 마크업
@@ -274,7 +264,7 @@
         _.eventsRegister.close(_);
     }
 
-    Kronos.prototype.closeDatepicker = function() {
+    Kronos.prototype.closeDatepicker = function () {
         // 달력 닫기
         var _ = this;
         _.element.year.outer.empty().addClass('kronos-outer-scale-h');
@@ -285,7 +275,7 @@
         $(document).off(_.events.click);
     }
 
-    Kronos.prototype.setThisDate = function() {
+    Kronos.prototype.setThisDate = function () {
         var _ = this;
         _.initial.thisY = _.initial.date.getFullYear();
         _.initial.startY = _.initial.thisY - 4 < 0 ? 0 : _.initial.thisY - 4;
@@ -306,7 +296,7 @@
         _.initial.thisDay = _.initial.date.getDay();
     }
 
-    Kronos.prototype.setDateInit = function(delta) {
+    Kronos.prototype.setDateInit = function (delta) {
         // 달력 그리기
         var _ = this;
         _.initial.date.setMonth(_.initial.date.getMonth() + delta);
@@ -324,8 +314,7 @@
         _.setDateMarkup(); // 각 날짜 마크업 그리기
         _.getCoreData(); // 코어 데이타 (this, from, to) 가져오기
         _.setDateClasses(); // 각 날짜에 클래스 매핑
-        _.slideDatepicker(delta, _.element.date.inner, _.element.date.inner2, function() {
-			_.options.onAfterCalendarDraw(_.element.date.inner);
+        _.slideDatepicker(delta, _.element.date.inner, _.element.date.inner2, function () {
             _.element.date.inner2 = _.element.date.inner;
             _.element.date.inner = null;
         });
@@ -333,7 +322,7 @@
         _.eventsRegister.date(_);
     }
 
-    Kronos.prototype.setMonthInit = function(delta) {
+    Kronos.prototype.setMonthInit = function (delta) {
         var _ = this;
         _.element.month.inner = _.element.month.outer.append(_.markups.month.inner).children('.kronos-month-inner:last-child');
         _.element.month.head = _.element.month.inner.append(_.markups.month.head).children('.kronos-month-head');
@@ -341,7 +330,7 @@
         _.element.month.prev = _.element.month.head.append(_.markups.month.prev).children('.kronos-month-prev');
         _.element.month.next = _.element.month.head.append(_.markups.month.next).children('.kronos-month-next');
         _.element.month.inner.css(_.autoPrefixer('none', delta * 100));
-        _.slideDatepicker(delta, _.element.month.inner, _.element.month.inner2, function() {
+        _.slideDatepicker(delta, _.element.month.inner, _.element.month.inner2, function () {
             _.element.month.inner2 = _.element.month.inner;
             _.element.month.inner = null;
         });
@@ -351,7 +340,7 @@
         _.eventsRegister.month(_);
     }
 
-    Kronos.prototype.setYearInit = function(delta) {
+    Kronos.prototype.setYearInit = function (delta) {
         var _ = this;
         if (!delta && _.element.year.inner2) {
             _.element.year.inner2.remove();
@@ -364,7 +353,7 @@
         _.element.year.inner.css(_.autoPrefixer('none', delta * 100));
         _.initial.startY = _.initial.thisY - 4 < 0 ? 0 : _.initial.thisY - 4;
         _.initial.endY = _.initial.startY + 8;
-        _.slideDatepicker(delta, _.element.year.inner, _.element.year.inner2, function() {
+        _.slideDatepicker(delta, _.element.year.inner, _.element.year.inner2, function () {
             _.element.year.inner2 = _.element.year.inner;
             _.element.year.inner = null;
         });
@@ -374,7 +363,7 @@
         _.eventsRegister.year(_);
     }
 
-    Kronos.prototype.setDayMarkup = function() {
+    Kronos.prototype.setDayMarkup = function () {
         var _ = this;
         _.markups.date.content = '<table><thead><tr>';
         for (var i = 0; i < 7; i++) {
@@ -383,7 +372,7 @@
         _.markups.date.content += '</tr></thead>';
     }
 
-    Kronos.prototype.setDateMarkup = function() {
+    Kronos.prototype.setDateMarkup = function () {
         var _ = this;
         _.initial.prevMonthFirstDate = _.initial.dateLeng[_.initial.prevM] - _.initial.thisDay;
         _.markups.date.content += '<tbody><tr>';
@@ -420,7 +409,7 @@
         _.element.date.date = _.element.date.body.find('td');
     }
 
-    Kronos.prototype.getCoreData = function() {
+    Kronos.prototype.getCoreData = function () {
         var _ = this;
         if (_.element.kronos.attr('core')) {
             _.corevar.selectedC = _.element.kronos.attr('core');
@@ -438,43 +427,41 @@
         }
     }
 
-    Kronos.prototype.setDateClasses = function() {
+    Kronos.prototype.setDateClasses = function () {
         var _ = this;
-		if (_.element.date.date) {
-			_.element.date.date.removeClass();
-			_.element.date.date.each(function() {
-				this.index = $(this).index();
-				this.core = $(this).find('button').attr('core');
-				this.mmdd = String(this.core).substring(4, 8);
+        _.element.date.date.removeClass();
+        _.element.date.date.each(function () {
+            this.index = $(this).index();
+            this.core = $(this).find('button').attr('core');
+            this.mmdd = String(this.core).substring(4, 8);
 
-				this.Class = this.index === 0 
-					? 'sunday' : this.index === 6 
-					? 'satday' : ''; // weekend
-				this.Class += this.core === _.corevar.selectedC
-					|| this.core === _.corevar.fromC
-					|| this.core === _.corevar.toC
-					? ' selected' : ''; // selected
-				this.Class += _.corevar.selectedC && _.corevar.fromC && this.core > _.corevar.fromC && this.core < _.corevar.selectedC
-					|| _.corevar.selectedC && _.corevar.toC && this.core < _.corevar.toC && this.core > _.corevar.selectedC
-					? ' period' : ''; // period
-				this.Class += this.core === _.corevar.today ? ' today' : '';
-				this.Class += _.isolateCore(this.core, 'year+month') === _.strings.prevYM
-					|| _.options.disableWeekends && (this.index === 0 || this.index === 6)
-					|| _.isolateCore(this.core, 'year+month') === _.strings.nextYM
-					|| _.corevar.fromC && this.core < _.corevar.fromC
-					|| _.corevar.toC && this.core > _.corevar.toC
-					|| _.options.date.disabled.indexOf(this.core) !== -1
-					|| _.options.date.disabled.indexOf(this.mmdd) !== -1
-					? ' disabled' : '';
-				this.Class += _.options.date.holiday.indexOf(this.core) !== -1
-					|| _.options.date.holiday.indexOf(this.mmdd) !== -1
-					? ' holiday' : '';
-				$(this).addClass(this.Class);
-			});
-		}
+            this.Class = this.index === 0 
+                ? 'sunday' : this.index === 6 
+                ? 'satday' : ''; // weekend
+            this.Class += this.core === _.corevar.selectedC
+                || this.core === _.corevar.fromC
+                || this.core === _.corevar.toC
+                ? ' selected' : ''; // selected
+            this.Class += _.corevar.selectedC && _.corevar.fromC && this.core > _.corevar.fromC && this.core < _.corevar.selectedC
+                || _.corevar.selectedC && _.corevar.toC && this.core < _.corevar.toC && this.core > _.corevar.selectedC
+                ? ' period' : ''; // period
+            this.Class += this.core === _.corevar.today ? ' today' : '';
+            this.Class += _.isolateCore(this.core, 'year+month') === _.strings.prevYM
+                || _.options.disableWeekends && (this.index === 0 || this.index === 6)
+                || _.isolateCore(this.core, 'year+month') === _.strings.nextYM
+                || _.corevar.fromC && this.core < _.corevar.fromC
+                || _.corevar.toC && this.core > _.corevar.toC
+                || _.options.date.disabled.indexOf(this.core) !== -1
+                || _.options.date.disabled.indexOf(this.mmdd) !== -1
+                ? ' disabled' : '';
+            this.Class += _.options.date.holiday.indexOf(this.core) !== -1
+                || _.options.date.holiday.indexOf(this.mmdd) !== -1
+                ? ' holiday' : '';
+            $(this).addClass(this.Class);
+        });
     }
 
-    Kronos.prototype.setMonthMarkup = function(delta) {
+    Kronos.prototype.setMonthMarkup = function (delta) {
         var _ = this;
         _.initial.thisY = parseInt(_.initial.thisY) + parseInt(delta);
         for (var i = 0; i < 12; i++) {
@@ -483,7 +470,7 @@
         _.element.month.month = _.element.month.body.find('button');
     }
 
-    Kronos.prototype.setYearMarkup = function(delta) {
+    Kronos.prototype.setYearMarkup = function (delta) {
         var _ = this;
         _.initial.startY = _.initial.startY + (9 * delta) < 0 ? 0 : _.initial.startY + (9 * delta);
         _.initial.thisY = _.initial.thisY + (9 * delta);
@@ -494,32 +481,30 @@
         _.element.year.year = _.element.year.body.find('button');
     }
 
-    Kronos.prototype.eventsRegister = (function() {
+    Kronos.prototype.eventsRegister = (function () {
         return {
-            open: function(_) {
+            open: function (_) {
                 if (!_.options.visible) {
-                    _.element.kronos.on(_.events.click, function(e) {
+                    _.element.kronos.on(_.events.click, function (e) {
                         _.openDatepicker();
                     });
                 }
             },
-            close: function(_) {
-                $(document).on(_.events.click, function(e) {
+            close: function (_) {
+                $(document).on(_.events.click, function (e) {
                     if (!$(e.target).closest(_.element.common.outer).length && !_.options.visible) {
                         _.closeDatepicker();
                     }
                 });
             },
-            date: function(_) {
-                _.element.date.title.on(_.events.click, function() {
+            date: function (_) {
+                _.element.date.title.on(_.events.click, function () {
                     _.setMonthInit(0);
                     _.visibleMotion('out', _.element.month.outer, _.element.date.outer);
                 });
-                _.element.date.date.on(_.events.click, function() {
+                _.element.date.date.on(_.events.click, function () {
                     if (!$(this).hasClass('disabled')) {
                         _.element.kronos.val(_.convertFormat(this.core)).attr({'core': this.core});
-						_.element.kronos.trigger('change');
-						_.element.kronos.trigger('input');
                         _.options.onChange(this.core);
 
                         if (_.options.visible) {
@@ -540,54 +525,54 @@
                         }
                     }
                 });
-                _.element.date.next.on(_.events.click, function() {
+                _.element.date.next.on(_.events.click, function () {
                     if (!_.initial.actionFlag) {
                         _.setDateInit(1);
                     }
                 });
-                _.element.date.prev.on(_.events.click, function() {
+                _.element.date.prev.on(_.events.click, function () {
                     if (!_.initial.actionFlag) {
                         _.setDateInit(-1);
                     }
                 });
             },
-            month: function(_) {
-                _.element.month.title.on(_.events.click, function() {
+            month: function (_) {
+                _.element.month.title.on(_.events.click, function () {
                     _.setYearInit(0);
                     _.visibleMotion('out', _.element.year.outer, _.element.month.outer);
                 });
-                _.element.month.month.on(_.events.click, function() {
+                _.element.month.month.on(_.events.click, function () {
                     _.initial.date.setFullYear(_.initial.thisY);
                     _.initial.date.setMonth(parseInt($(this).text()) - 1);
                     _.setDateInit(0);
 
                     _.visibleMotion('in', _.element.date.outer, _.element.month.outer);
                 });
-                _.element.month.next.on(_.events.click, function() {
+                _.element.month.next.on(_.events.click, function () {
                     if (!_.initial.actionFlag) {
                         _.setMonthInit(1);
                     }
                 });
-                _.element.month.prev.on(_.events.click, function() {
+                _.element.month.prev.on(_.events.click, function () {
                     if (!_.initial.actionFlag) {
                         _.setMonthInit(-1);
                     }
                 });
             },
-            year: function(_) {
-                _.element.year.year.on(_.events.click, function() {
+            year: function (_) {
+                _.element.year.year.on(_.events.click, function () {
                     _.initial.date.setFullYear($(this).attr('core'));
                     _.initial.thisY = $(this).attr('core');
                     _.setMonthInit(0);
 
                     _.visibleMotion('in', _.element.month.outer, _.element.year.outer);
                 });
-                _.element.year.next.on(_.events.click, function() {
+                _.element.year.next.on(_.events.click, function () {
                     if (!_.initial.actionFlag) {
                         _.setYearInit(1);
                     }
                 });
-                _.element.year.prev.on(_.events.click, function() {
+                _.element.year.prev.on(_.events.click, function () {
                     if (!_.initial.actionFlag) {
                         _.setYearInit(-1);
                     }
@@ -596,25 +581,17 @@
         }
     })();
 
-    Kronos.prototype.init = function() {
+    Kronos.prototype.init = function () {
         var _ = this;
         _.checkFormat();
         _.getTodayDate();
         _.setLayout();
-        _.setKronosValue(_.options.initDate);
+        _.setKronosValue();
         _.setVisible();
         _.eventsRegister.open(_);
     }
 
-	Kronos.prototype.cleanPeriod = function() {
-		var _ = this;
-        _.corevar.fromC = null;
-        _.corevar.fromF = null;
-        _.corevar.toC = null;
-        _.corevar.toF = null;
-	}
-
-    Kronos.prototype.resetPeriod = function() {
+    Kronos.prototype.resetPeriod = function () {
         var _ = this;
         _.element.kronos.val(null).attr('core', null);
         _.corevar.selectedC = null;
@@ -623,19 +600,10 @@
         _.corevar.fromF = null;
         _.corevar.toC = null;
         _.corevar.toF = null;
-
-		if (_.element.kronosF) {
-			_.element.kronosF.kronos('cleanPeriod');
-		}
-
-		if (_.element.kronosT) {
-			_.element.kronosT.kronos('cleanPeriod');
-		}
-
         _.setDateClasses();
     }
 
-    $.fn.kronos = function() {
+    $.fn.kronos = function () {
         var _ = this,
             o = arguments[0],
             s = Array.prototype.slice.call(arguments, 1),
