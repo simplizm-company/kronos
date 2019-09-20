@@ -72,7 +72,7 @@
 
                     head: '<div class="kronos-year-head">',
                     body: '<div class="kronos-year-body">',
-                    title: '<button class="kronos-year-title"></button>',
+                    title: '<button type="button" class="kronos-year-title"></button>',
 
                     prev: '<button type="button" class="kronos-year-prev" title="'+_.options.text.btnYearPrev+'">'+_.options.text.btnYearPrev+'</button>',
                     next: '<button type="button" class="kronos-year-next" title="'+_.options.text.btnYearNext+'">'+_.options.text.btnYearNext+'</button>'
@@ -83,7 +83,7 @@
 
                     head: '<div class="kronos-month-head">',
                     body: '<div class="kronos-month-body">',
-                    title: '<button class="kronos-month-title"></button>',
+                    title: '<button type="button" class="kronos-month-title"></button>',
 
                     prev: '<button type="button" class="kronos-month-prev" title="'+_.options.text.btnMonthPrev+'">'+_.options.text.btnMonthPrev+'</button>',
                     next: '<button type="button" class="kronos-month-next" title="'+_.options.text.btnMonthNext+'">'+_.options.text.btnMonthNext+'</button>'
@@ -94,7 +94,7 @@
 
                     head: '<div class="kronos-date-head">',
                     body: '<div class="kronos-date-body">',
-                    title: '<button class="kronos-date-title"></button>',
+                    title: '<button type="button" class="kronos-date-title"></button>',
 
                     prev: '<button type="button" class="kronos-date-prev" title="'+_.options.text.btnDatePrev+'">'+_.options.text.btnDatePrev+'</button>',
                     next: '<button type="button" class="kronos-date-next" title="'+_.options.text.btnDateNext+'">'+_.options.text.btnDateNext+'</button>',
@@ -479,7 +479,7 @@
         var _ = this;
         _.initial.thisY = parseInt(_.initial.thisY) + parseInt(delta);
         for (var i = 0; i < 12; i++) {
-            _.element.month.body.append('<button core="'+_.initial.thisY+_.combineZero(i+1)+'" class="'+(_.initial.thisY === _.initial.date.getFullYear() && i === _.initial.thisM ? 'selected' : '')+'">'+(i+1)+'</button>');
+            _.element.month.body.append('<button type="button" core="'+_.initial.thisY+_.combineZero(i+1)+'" class="'+(_.initial.thisY === _.initial.date.getFullYear() && i === _.initial.thisM ? 'selected' : '')+'">'+(i+1)+'</button>');
         }
         _.element.month.month = _.element.month.body.find('button');
     }
@@ -490,7 +490,7 @@
         _.initial.thisY = _.initial.thisY + (9 * delta);
         _.initial.endY = _.initial.startY + 8;
         for (var i = _.initial.startY; i <= _.initial.endY; i++) {
-            _.element.year.body.append('<button core="'+i+'" class="'+(i === _.initial.date.getFullYear() ? 'selected' : '')+'">'+i+'</button>');
+            _.element.year.body.append('<button type="button" core="'+i+'" class="'+(i === _.initial.date.getFullYear() ? 'selected' : '')+'">'+i+'</button>');
         }
         _.element.year.year = _.element.year.body.find('button');
     }
