@@ -242,7 +242,7 @@
         if (initDate) {
             _.corevar.selectedC = initDate;
             _.corevar.selectedF = _.convertFormat(_.corevar.selectedC);
-            _.element.kronos.attr({'core': _.corevar.selectedC}).val(_.corevar.selectedF);
+            _.element.kronos.attr('core', _.corevar.selectedC).val(_.corevar.selectedF);
 			_.initial.date.setFullYear(parseInt(initDate.substring(0, 4)));
 			_.initial.date.setMonth(parseInt(initDate.substring(4, 6)) - 1);
 			if (!_.options.visible) {
@@ -517,7 +517,7 @@
                 });
                 _.element.date.date.on(_.events.click, function() {
                     if (!$(this).hasClass('disabled')) {
-                        _.element.kronos.val(_.convertFormat(this.core)).attr({'core': this.core});
+                        _.element.kronos.val(_.convertFormat(this.core)).attr('core', this.core);
 						_.element.kronos.trigger('change');
 						_.element.kronos.trigger('input');
                         _.options.onChange(this.core);
