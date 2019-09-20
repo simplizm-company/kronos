@@ -240,6 +240,7 @@
     Kronos.prototype.setKronosValue = function(initDate) {
         var _ = this;
         if (initDate) {
+			var initDate = initDate.replace(/[^0-9]/g, '');
             _.corevar.selectedC = initDate;
             _.corevar.selectedF = _.convertFormat(_.corevar.selectedC);
             _.element.kronos.attr('core', _.corevar.selectedC).val(_.corevar.selectedF);
@@ -601,7 +602,7 @@
         _.checkFormat();
         _.getTodayDate();
         _.setLayout();
-        _.setKronosValue(_.options.initDate);
+        _.setKronosValue(_.element.kronos.val());
         _.setVisible();
         _.eventsRegister.open(_);
     }

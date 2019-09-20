@@ -248,11 +248,9 @@ td, th {vertical-align: middle;}
                         <h3 class="tit">2. value값 설정</h3>
                     </div>
                     <div class="cont">
-                        <input type="text" id="kronos2" style="width: 200px;">
+                        <input type="text" id="kronos2" style="width: 200px;" value="20190305">
                         <script>
-                            $('#kronos2').kronos({
-                                initDate: '20190305'
-                            });
+                            $('#kronos2').kronos();
                         </script>
                     </div>
                 </section>
@@ -261,17 +259,15 @@ td, th {vertical-align: middle;}
                         <h3 class="tit">3. value 포맷 설정</h3>
                     </div>
                     <div class="cont">
-                        <input type="text" id="kronos3-1" style="width: 200px;">
+                        <input type="text" id="kronos3-1" style="width: 200px;" value="20190305">
                         <script>
                             $('#kronos3-1').kronos({
-                                initDate: '20190305',
                                 format: 'mm.dd.yy'
                             });
                         </script>
-                        <input type="text" id="kronos3-2" style="width: 200px;">
+                        <input type="text" id="kronos3-2" style="width: 200px;" value="20190305">
                         <script>
                             $('#kronos3-2').kronos({
-                                initDate: '20190305',
                                 format: 'mm/dd/yyyy'
                             });
                         </script>
